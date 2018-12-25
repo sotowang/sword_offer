@@ -9,18 +9,33 @@ public class Solution {
     public static void main(String[] args) {
 
 
-        ListNode head = new ListNode(-1);
+        ListNode head1 = new ListNode(-1);
+        ListNode head2 = new ListNode(-1);
 //
-        for (int i = 0; i < 10; i++) {
+        for (int i = 6; i > 0; ) {
             ListNode p = new ListNode(i);
-            p.next = head.next;
-            head.next = p;
+            p.next = head1.next;
+            head1.next = p;
+            i -= 2;
+        }
+        for (int i = 6; i > 1; ) {
+            ListNode p = new ListNode(i);
+            p.next = head1.next;
+            head2.next = p;
+            i -= 2;
+        }
+
+
+        ListNode result = Merge(head1.next, head2.next);
+        while (result != null) {
+            System.out.println(result.val);
+            result = result.next;
         }
 
         /**
          * 输入一个链表，反转链表后，输出新链表的表头。
          */
-        System.out.println(ReverseList(head).val);
+//        System.out.println(ReverseList(head1).val);
 
 //        for (int i = 0; i < 10; i++) {
 //            head = head.next;
@@ -126,6 +141,39 @@ public class Solution {
     }
 
     /**
+     * 输入两个单调递增的链表，输出两个链表合成后的链表，当然我们需要合成后的链表满足单调不减规则。
+     */
+    public static ListNode Merge(ListNode list1, ListNode list2) {
+        ListNode head = new ListNode(-1);
+        ListNode p = list1;
+        ListNode q = list2;
+        ListNode l1, l2,r=head;
+        while (p != null && q != null) {
+            if (p.val <= q.val) {
+                l1 = p;
+                p = p.next;
+                l1.next = null;
+                r.next = l1;
+                r = l1;
+            }else{
+                l2 = q;
+                q = q.next;
+                l2.next = null;
+                r.next = l2;
+                r = l2;
+            }
+        }
+        if (p != null) {
+            r.next = p;
+        }
+        if (q != null) {
+            r.next = q;
+        }
+        return head.next;
+    }
+
+
+    /**
      * 输入一个链表，反转链表后，输出新链表的表头。
      */
     public static ListNode ReverseList(ListNode head) {
@@ -143,6 +191,7 @@ public class Solution {
         return head;
 
     }
+
     /**
      * 输入一个链表，输出该链表中倒数第k个结点。
      */
@@ -155,7 +204,7 @@ public class Solution {
         for (int i = 0; i < k - 1; i++) {
             if (q.next != null) {
                 q = q.next;
-            }else {
+            } else {
                 return null;
             }
         }
