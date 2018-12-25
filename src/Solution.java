@@ -8,7 +8,11 @@ public class Solution {
 
     public static void main(String[] args) {
 
-
+        /**
+         * 给定一个double类型的浮点数base和int类型的整数exponent。
+         * 求base的exponent次方。
+         */
+        System.out.println(Power(2, -1));
 
         /**
          * 输入一个整数，输出该数二进制表示中1的个数。其中负数用补码表示。
@@ -87,8 +91,17 @@ public class Solution {
      * 给定一个double类型的浮点数base和int类型的整数exponent。
      * 求base的exponent次方。
      */
-    public double Power(double base, int exponent) {
-
+    public static double Power(double base, int exponent) {
+        double result = 1;
+        int flag = 1;
+        if (exponent < 0) {
+            exponent = -exponent;
+            flag = 0;
+        }
+        for (int i = 0; i < exponent; i++) {
+            result = result * base;
+        }
+        return flag == 1 ? result : 1 / result;
     }
     /**
      * 输入一个整数，输出该数二进制表示中1的个数。其中负数用补码表示。
