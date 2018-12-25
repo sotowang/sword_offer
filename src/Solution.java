@@ -8,11 +8,23 @@ public class Solution {
 
     public static void main(String[] args) {
 
+
+        /**
+         * 输入一个整数数组，实现一个函数来调整该数组中数字的顺序，
+         * 使得所有的奇数位于数组的前半部分，所有的偶数位于数组的后半部分，并保证奇数和奇数，偶数和偶数之间的相对位置不变。
+         */
+        int[] array = {1, 2, 3, 4,5,6,7,8,9,0};
+        reOrderArray(array);
+        for (int i = 0; i < array.length; i++) {
+
+            System.out.print(array[i]);
+        }
+
         /**
          * 给定一个double类型的浮点数base和int类型的整数exponent。
          * 求base的exponent次方。
          */
-        System.out.println(Power(2, -1));
+//        System.out.println(Power(2, -1));
 
         /**
          * 输入一个整数，输出该数二进制表示中1的个数。其中负数用补码表示。
@@ -85,6 +97,25 @@ public class Solution {
 //        ArrayList<Integer> arrayList = new ArrayList<>(printListFromTailToHead(head.next));
 //
 //        System.out.println(arrayList);
+    }
+
+    /**
+     * 输入一个整数数组，实现一个函数来调整该数组中数字的顺序，
+     * 使得所有的奇数位于数组的前半部分，所有的偶数位于数组的后半部分，并保证奇数和奇数，偶数和偶数之间的相对位置不变。
+     */
+    public static void reOrderArray(int[] array) {
+        int[] new_array = new int[array.length];
+        int k = 0;
+        int m = 0;
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] % 2 == 1) {
+                array[k++] = array[i];
+            }else
+                new_array[m++] = array[i];
+        }
+        for (int j = 0; j < m; j++) {
+            array[k++] = new_array[j];
+        }
     }
 
     /**
