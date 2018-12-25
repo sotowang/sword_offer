@@ -137,18 +137,46 @@ public class Solution {
 //
 //        System.out.println(arrayList);
     }
+
+    /**
+     * 操作给定的二叉树，将其变换为源二叉树的镜像。
+     */
+    public void Mirror(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        TreeNode tmp;
+        if (root != null) {
+            tmp = root.left;
+            root.left = root.right;
+            root.right = tmp;
+        }
+        if (root.left != null) {
+            Mirror(root.left);
+        }
+        if (root.right != null) {
+            Mirror(root.right);
+        }
+    }
+
+
+
     /**
      * 输入两棵二叉树A，B，判断B是不是A的子结构。（ps：我们约定空树不是任意一个树的子结构）
      */
-    public boolean HasSubtree(TreeNode root1,TreeNode root2) {
+    public boolean HasSubtree(TreeNode root1, TreeNode root2) {
 
         boolean result = false;
-        if(root1 != null && root2 != null){
-            if(root1.val == root2.val){
-                result = isSubtree(root1,root2);
+        if (root1 != null && root2 != null) {
+            if (root1.val == root2.val) {
+                result = isSubtree(root1, root2);
             }
-            if(!result){result = HasSubtree(root1.left, root2);}
-            if(!result){result = HasSubtree(root1.right, root2);}
+            if (!result) {
+                result = HasSubtree(root1.left, root2);
+            }
+            if (!result) {
+                result = HasSubtree(root1.right, root2);
+            }
         }
         return result;
     }
@@ -162,7 +190,7 @@ public class Solution {
         }
         if (node1.val == node2.val) {
             return isSubtree(node1.left, node2.left) && isSubtree(node1.right, node2.right);
-        }else
+        } else
             return false;
     }
 
@@ -173,7 +201,7 @@ public class Solution {
         ListNode head = new ListNode(-1);
         ListNode p = list1;
         ListNode q = list2;
-        ListNode l1, l2,r=head;
+        ListNode l1, l2, r = head;
         while (p != null && q != null) {
             if (p.val <= q.val) {
                 l1 = p;
@@ -181,7 +209,7 @@ public class Solution {
                 l1.next = null;
                 r.next = l1;
                 r = l1;
-            }else{
+            } else {
                 l2 = q;
                 q = q.next;
                 l2.next = null;
