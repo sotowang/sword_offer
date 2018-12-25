@@ -8,6 +8,11 @@ public  class Solution {
 
     public static void main(String[] args) {
 
+        /**
+         * 大家都知道斐波那契数列，现在要求输入一个整数n，请你输出斐波那契数列的第n项（从0开始，第0项为0）。
+         * n<=39
+         */
+        System.out.println(Fibonacci(6));
 
         /**
          * 用两个栈来实现一个队列，完成队列的Push和Pop操作。 队列中的元素为int类型。
@@ -56,6 +61,19 @@ public  class Solution {
 //        ArrayList<Integer> arrayList = new ArrayList<>(printListFromTailToHead(head.next));
 //
 //        System.out.println(arrayList);
+    }
+
+    /**
+     * 大家都知道斐波那契数列，现在要求输入一个整数n，请你输出斐波那契数列的第n项（从0开始，第0项为0）。
+     * n<=39
+     */
+    public static int Fibonacci(int n) {
+        if (n == 0 || n == 1) {
+            return n;
+        }
+        return Fibonacci(n - 1) + Fibonacci(n - 2);
+
+
     }
 
 
