@@ -8,17 +8,37 @@ public class Solution {
 
     public static void main(String[] args) {
 
+        /**
+         * 输入一个链表，输出该链表中倒数第k个结点。
+         */
+        ListNode head = new ListNode(-1);
+//
+        for (int i = 0; i < 10; i++) {
+            ListNode p = new ListNode(i);
+            p.next = head.next;
+            head.next = p;
+        }
+
+//        for (int i = 0; i < 10; i++) {
+//            head = head.next;
+//            System.out.print(head.val);
+//        }
+        head = FindKthToTail(head.next, 11);
+
+
+//        System.out.println(head.val);
+
 
         /**
          * 输入一个整数数组，实现一个函数来调整该数组中数字的顺序，
          * 使得所有的奇数位于数组的前半部分，所有的偶数位于数组的后半部分，并保证奇数和奇数，偶数和偶数之间的相对位置不变。
          */
-        int[] array = {1, 2, 3, 4,5,6,7,8,9,0};
-        reOrderArray(array);
-        for (int i = 0; i < array.length; i++) {
-
-            System.out.print(array[i]);
-        }
+//        int[] array = {1, 2, 3, 4, 5, 6, 7, 8, 9, 0};
+//        reOrderArray(array);
+//        for (int i = 0; i < array.length; i++) {
+//
+//            System.out.print(array[i]);
+//        }
 
         /**
          * 给定一个double类型的浮点数base和int类型的整数exponent。
@@ -100,6 +120,30 @@ public class Solution {
     }
 
     /**
+     * 输入一个链表，输出该链表中倒数第k个结点。
+     */
+    public static ListNode FindKthToTail(ListNode head, int k) {
+
+        ListNode q = head;
+        if (k <= 0 || head == null) {
+            return null;
+        }
+        for (int i = 0; i < k - 1; i++) {
+            if (q.next != null) {
+                q = q.next;
+            }else {
+                return null;
+            }
+        }
+
+        while (q.next != null && q != null) {
+            head = head.next;
+            q = q.next;
+        }
+        return head;
+    }
+
+    /**
      * 输入一个整数数组，实现一个函数来调整该数组中数字的顺序，
      * 使得所有的奇数位于数组的前半部分，所有的偶数位于数组的后半部分，并保证奇数和奇数，偶数和偶数之间的相对位置不变。
      */
@@ -110,7 +154,7 @@ public class Solution {
         for (int i = 0; i < array.length; i++) {
             if (array[i] % 2 == 1) {
                 array[k++] = array[i];
-            }else
+            } else
                 new_array[m++] = array[i];
         }
         for (int j = 0; j < m; j++) {
@@ -134,6 +178,7 @@ public class Solution {
         }
         return flag == 1 ? result : 1 / result;
     }
+
     /**
      * 输入一个整数，输出该数二进制表示中1的个数。其中负数用补码表示。
      */
@@ -145,6 +190,7 @@ public class Solution {
         }
         return count;
     }
+
     /**
      * 我们可以用2*1的小矩形横着或者竖着去覆盖更大的矩形。
      * 请问用n个2*1的小矩形无重叠地覆盖一个2*n的大矩形，总共有多少种方法？
@@ -153,7 +199,7 @@ public class Solution {
         if (target <= 0) {
             return 0;
         }
-        if (target ==1 || target == 2) {
+        if (target == 1 || target == 2) {
             return target;
         }
         return RectCover(target - 1) + RectCover(target - 2);
@@ -179,7 +225,7 @@ public class Solution {
      * 例如数组{3,4,5,1,2}为{1,2,3,4,5}的一个旋转，该数组的最小值为1。
      * NOTE：给出的所有元素都大于0，若数组大小为0，请返回0。
      */
-    public static int minNumberInRotateArray(int [] array) {
+    public static int minNumberInRotateArray(int[] array) {
         if (array.length == 0) {
             return 0;
         }
@@ -187,11 +233,12 @@ public class Solution {
         for (int i = array.length - 1; i > 0; i--) {
             if (array[i] <= min) {
                 min = array[i];
-            }else
+            } else
                 break;
         }
         return min;
     }
+
     /**
      * 一只青蛙一次可以跳上1级台阶，也可以跳上2级。
      * 求该青蛙跳上一个n级的台阶总共有多少种跳法（先后次序不同算不同的结果）。
