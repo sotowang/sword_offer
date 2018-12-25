@@ -8,17 +8,28 @@ public  class Solution {
 
     public static void main(String[] args) {
 
+
+        /**
+         * 用两个栈来实现一个队列，完成队列的Push和Pop操作。 队列中的元素为int类型。
+         */
+////        pop();
+//        push(1);
+//        System.out.println(pop());
+
+
+
+
         /**
          * 输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。
          * 例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，则重建二叉树并返回。
          *
          */
 
-        int[] pre = {1, 2, 4, 7, 3, 5, 6, 8};
-        int[] in = {4, 7, 2, 1, 5, 3, 8, 6};
-        TreeNode root = reConstructBinaryTree(pre, in);
-
-        printTree(root);
+//        int[] pre = {1, 2, 4, 7, 3, 5, 6, 8};
+//        int[] in = {4, 7, 2, 1, 5, 3, 8, 6};
+//        TreeNode root = reConstructBinaryTree(pre, in);
+//
+//        printTree(root);
 
 
 
@@ -45,12 +56,32 @@ public  class Solution {
 //        ArrayList<Integer> arrayList = new ArrayList<>(printListFromTailToHead(head.next));
 //
 //        System.out.println(arrayList);
-
-
-
-
-
     }
+
+
+    /**
+     * 用两个栈来实现一个队列，完成队列的Push和Pop操作。 队列中的元素为int类型。
+     */
+    static Stack<Integer> stack1 = new Stack<Integer>();
+    static Stack<Integer> stack2 = new Stack<Integer>();
+
+    public static void push(int node) {
+        stack1.push(node);
+    }
+
+    public static int pop() {
+        if (stack1.empty() && stack2.empty()) {
+            throw new RuntimeException("Query is empty!");
+        }
+        if (stack2.empty()) {
+            while (!stack1.empty()) {
+                stack2.push(stack1.pop());
+            }
+        }
+
+        return stack2.pop();
+    }
+
 
     /**
      * 输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。
