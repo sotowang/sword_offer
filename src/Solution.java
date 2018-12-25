@@ -8,9 +8,7 @@ public class Solution {
 
     public static void main(String[] args) {
 
-        /**
-         * 输入一个链表，输出该链表中倒数第k个结点。
-         */
+
         ListNode head = new ListNode(-1);
 //
         for (int i = 0; i < 10; i++) {
@@ -19,11 +17,19 @@ public class Solution {
             head.next = p;
         }
 
+        /**
+         * 输入一个链表，反转链表后，输出新链表的表头。
+         */
+        System.out.println(ReverseList(head).val);
+
 //        for (int i = 0; i < 10; i++) {
 //            head = head.next;
 //            System.out.print(head.val);
 //        }
-        head = FindKthToTail(head.next, 11);
+        /**
+         * 输入一个链表，输出该链表中倒数第k个结点。
+         */
+//        head = FindKthToTail(head.next, 11);
 
 
 //        System.out.println(head.val);
@@ -119,6 +125,24 @@ public class Solution {
 //        System.out.println(arrayList);
     }
 
+    /**
+     * 输入一个链表，反转链表后，输出新链表的表头。
+     */
+    public static ListNode ReverseList(ListNode head) {
+        ListNode p = head;
+        ListNode q;
+        ListNode l = new ListNode(0);
+        l.next = null;
+        while (p != null) {
+            q = p;
+            p = p.next;
+            q.next = l.next;
+            l.next = q;
+        }
+        head = l.next;
+        return head;
+
+    }
     /**
      * 输入一个链表，输出该链表中倒数第k个结点。
      */
