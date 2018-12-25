@@ -3,15 +3,33 @@ import sun.reflect.generics.tree.Tree;
 import java.util.ArrayList;
 import java.util.Stack;
 
-public  class Solution {
+public class Solution {
 
 
     public static void main(String[] args) {
+
+
+
+        /**
+         * 输入一个整数，输出该数二进制表示中1的个数。其中负数用补码表示。
+         */
+//        System.out.println(NumberOf1(10));
+
+        /**
+         * 把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。
+         * 输入一个非减排序的数组的一个旋转，输出旋转数组的最小元素。
+         * 例如数组{3,4,5,1,2}为{1,2,3,4,5}的一个旋转，该数组的最小值为1。
+         * NOTE：给出的所有元素都大于0，若数组大小为0，请返回0。
+         */
+//        int[] array = {3, 3, 4, 5, 1, 2,2};
+//        System.out.println(minNumberInRotateArray(array));
+
+
         /**
          * 一只青蛙一次可以跳上1级台阶，也可以跳上2级。
          * 求该青蛙跳上一个n级的台阶总共有多少种跳法（先后次序不同算不同的结果）。
          */
-        System.out.println(JumpFloor(5));
+//        System.out.println(JumpFloor(5));
 
 
         /**
@@ -28,8 +46,6 @@ public  class Solution {
 //        System.out.println(pop());
 
 
-
-
         /**
          * 输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。
          * 例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，则重建二叉树并返回。
@@ -41,8 +57,6 @@ public  class Solution {
 //        TreeNode root = reConstructBinaryTree(pre, in);
 //
 //        printTree(root);
-
-
 
 
         /**
@@ -70,6 +84,71 @@ public  class Solution {
     }
 
     /**
+     * 给定一个double类型的浮点数base和int类型的整数exponent。
+     * 求base的exponent次方。
+     */
+    public double Power(double base, int exponent) {
+
+    }
+    /**
+     * 输入一个整数，输出该数二进制表示中1的个数。其中负数用补码表示。
+     */
+    public static int NumberOf1(int n) {
+        int count = 0;
+        while (n != 0) {
+            count++;
+            n = n & (n - 1);
+        }
+        return count;
+    }
+    /**
+     * 我们可以用2*1的小矩形横着或者竖着去覆盖更大的矩形。
+     * 请问用n个2*1的小矩形无重叠地覆盖一个2*n的大矩形，总共有多少种方法？
+     */
+    public int RectCover(int target) {
+        if (target <= 0) {
+            return 0;
+        }
+        if (target ==1 || target == 2) {
+            return target;
+        }
+        return RectCover(target - 1) + RectCover(target - 2);
+    }
+
+    /**
+     * 一只青蛙一次可以跳上1级台阶，也可以跳上2级……它也可以跳上n级。
+     * 求该青蛙跳上一个n级的台阶总共有多少种跳法。
+     */
+    public int JumpFloorII(int target) {
+        if (target <= 0) {
+            return -1;
+        }
+        if (target == 1) {
+            return 1;
+        }
+        return 2 * JumpFloorII(target - 1);
+    }
+
+    /**
+     * 把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。
+     * 输入一个非减排序的数组的一个旋转，输出旋转数组的最小元素。
+     * 例如数组{3,4,5,1,2}为{1,2,3,4,5}的一个旋转，该数组的最小值为1。
+     * NOTE：给出的所有元素都大于0，若数组大小为0，请返回0。
+     */
+    public static int minNumberInRotateArray(int [] array) {
+        if (array.length == 0) {
+            return 0;
+        }
+        int min = array[0];
+        for (int i = array.length - 1; i > 0; i--) {
+            if (array[i] <= min) {
+                min = array[i];
+            }else
+                break;
+        }
+        return min;
+    }
+    /**
      * 一只青蛙一次可以跳上1级台阶，也可以跳上2级。
      * 求该青蛙跳上一个n级的台阶总共有多少种跳法（先后次序不同算不同的结果）。
      */
@@ -83,7 +162,7 @@ public  class Solution {
         if (target == 2) {
             return 2;
         }
-        int first =1;
+        int first = 1;
         int second = 2;
         int third = 0;
         for (int i = 3; i <= target; i++) {
@@ -134,7 +213,7 @@ public  class Solution {
      * 输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。
      * 例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，则重建二叉树并返回。
      */
-    public static TreeNode reConstructBinaryTree(int [] pre,int [] in) {
+    public static TreeNode reConstructBinaryTree(int[] pre, int[] in) {
 
         TreeNode root = reConstructBinaryTree(pre, 0, pre.length - 1, in, 0, in.length - 1);
         return root;
@@ -149,8 +228,8 @@ public  class Solution {
 
         for (int i = startIn; i <= endIn; i++) {
             if (in[i] == pre[startPre]) {
-                root.left = reConstructBinaryTree(pre, startPre + 1, startPre+i-startIn, in, startIn, i - 1);
-                root.right = reConstructBinaryTree(pre, startPre + i-startIn+1, endPre, in, i + 1, endIn);
+                root.left = reConstructBinaryTree(pre, startPre + 1, startPre + i - startIn, in, startIn, i - 1);
+                root.right = reConstructBinaryTree(pre, startPre + i - startIn + 1, endPre, in, i + 1, endIn);
             }
         }
 
@@ -184,16 +263,16 @@ public  class Solution {
     }
 
 
-
     /**
      * 请实现一个函数，将一个字符串中的每个空格替换成“%20”。例如，当字符串为We Are Happy.则经过替换之后的字符串为We%20Are%20Happy。
+     *
      * @param str
      * @return
      */
     public static String replaceSpace(StringBuffer str) {
         StringBuffer new_str = new StringBuffer();
         int a;
-        while ( ( a = str.indexOf(" ")) > -1) {
+        while ((a = str.indexOf(" ")) > -1) {
             str.replace(a, a + 1, "%20");
         }
 
