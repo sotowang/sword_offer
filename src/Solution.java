@@ -13,6 +13,10 @@ public class Solution {
          * 如果是则输出Yes,否则输出No。
          * 假设输入的数组的任意两个数字都互不相同。
          */
+//        int[] sequence = {3, 6, 5, 15, 20,10};
+        int[] sequence = {7,4,6,5};
+
+        System.out.println(VerifySquenceOfBST(sequence));
 
         /**
          * 从上往下打印出二叉树的每个节点，同层节点从左至右打印。
@@ -25,9 +29,9 @@ public class Solution {
          * 例如序列1,2,3,4,5是某栈的压入顺序，序列4,5,3,2,1是该压栈序列对应的一个弹出序列，但4,3,5,1,2就不可能是该压栈序列的弹出序列。
          * （注意：这两个序列的长度是相等的）
          */
-        int[] pushA = {1, 2, 3, 4, 5};
-        int[] popA = {4, 3, 5, 1, 2};
-        System.out.println(IsPopOrder(pushA, popA));
+//        int[] pushA = {1, 2, 3, 4, 5};
+//        int[] popA = {4, 3, 5, 1, 2};
+//        System.out.println(IsPopOrder(pushA, popA));
 
 
         /**
@@ -169,6 +173,38 @@ public class Solution {
 //        System.out.println(arrayList);
     }
 
+
+    /**
+     * 输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历的结果。
+     * 如果是则输出Yes,否则输出No。
+     * 假设输入的数组的任意两个数字都互不相同。
+     */
+    public static boolean VerifySquenceOfBST(int [] sequence) {
+        if (sequence.length == 0) {
+            return false;
+        }
+        if (sequence.length == 1) {
+            return true;
+        }
+        return judge(0, sequence.length - 1, sequence);
+    }
+
+    public static boolean judge(int start, int end, int[] sequence) {
+        if (start >= end) {
+            return true;
+        }
+        int i = start;
+        while (sequence[i] < sequence[end]) {
+            i++;
+        }
+        for (int j = i; j < end; j++) {
+            if (sequence[j] < sequence[end]) {
+                return false;
+            }
+        }
+        return judge(start, i-1, sequence) && judge(i , end - 1, sequence);
+
+    }
 
 
     /**
