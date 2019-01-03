@@ -6,29 +6,47 @@ public class Solution {
 
     public static void main(String[] args) {
 
+        /**
+         *
+         * 输入两个整数序列，第一个序列表示栈的压入顺序，请判断第二个序列是否可能为该栈的弹出顺序。假设压入栈的所有数字均不相等。
+         * 例如序列1,2,3,4,5是某栈的压入顺序，序列4,5,3,2,1是该压栈序列对应的一个弹出序列，但4,3,5,1,2就不可能是该压栈序列的弹出序列。
+         * （注意：这两个序列的长度是相等的）
+         */
+        int[] pushA = {1, 2, 3, 4, 5};
+        int[] popA = {4, 3, 5, 1, 2};
+        System.out.println(IsPopOrder(pushA, popA));
 
-        ListNode head1 = new ListNode(-1);
-        ListNode head2 = new ListNode(-1);
+
+        /**
+         * 输入一个矩阵，按照从外向里以顺时针的顺序依次打印出每一个数字，
+         * 例如，如果输入如下4 X 4矩阵： 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
+         * 则依次打印出数字1,2,3,4,8,12,16,15,14,13,9,5,6,7,11,10.
+         */
+//        int[][] matrix = {{4, 5,6}, {7, 8,9}};
+//        System.out.println(matrix[0].length);
+
+//        ListNode head1 = new ListNode(-1);
+//        ListNode head2 = new ListNode(-1);
+////
+//        for (int i = 6; i > 0; ) {
+//            ListNode p = new ListNode(i);
+//            p.next = head1.next;
+//            head1.next = p;
+//            i -= 2;
+//        }
+//        for (int i = 6; i > 1; ) {
+//            ListNode p = new ListNode(i);
+//            p.next = head1.next;
+//            head2.next = p;
+//            i -= 2;
+//        }
 //
-        for (int i = 6; i > 0; ) {
-            ListNode p = new ListNode(i);
-            p.next = head1.next;
-            head1.next = p;
-            i -= 2;
-        }
-        for (int i = 6; i > 1; ) {
-            ListNode p = new ListNode(i);
-            p.next = head1.next;
-            head2.next = p;
-            i -= 2;
-        }
-
-
-        ListNode result = Merge(head1.next, head2.next);
-        while (result != null) {
-            System.out.println(result.val);
-            result = result.next;
-        }
+//
+//        ListNode result = Merge(head1.next, head2.next);
+//        while (result != null) {
+//            System.out.println(result.val);
+//            result = result.next;
+//        }
 
         /**
          * 输入一个链表，反转链表后，输出新链表的表头。
@@ -139,6 +157,69 @@ public class Solution {
     }
 
     /**
+     * 输入两个整数序列，第一个序列表示栈的压入顺序，请判断第二个序列是否可能为该栈的弹出顺序。假设压入栈的所有数字均不相等。
+     * 例如序列1,2,3,4,5是某栈的压入顺序，序列4,5,3,2,1是该压栈序列对应的一个弹出序列，但4,3,5,1,2就不可能是该压栈序列的弹出序列。
+     * （注意：这两个序列的长度是相等的）
+     */
+
+    public static boolean IsPopOrder(int[] pushA, int[] popA) {
+        if (pushA.length == 0 || popA.length == 0) {
+            return false;
+        }
+        Stack<Integer> stack = new Stack<>();
+        int popIndex = 0;
+        for (int i = 0; i < pushA.length; i++) {
+            stack.push(pushA[i]);
+            //注意这个判定顺序
+            while (!stack.empty() && stack.peek() == popA[popIndex] ) {
+                stack.pop();
+                popIndex++;
+            }
+        }
+
+        return stack.empty();
+
+    }
+
+
+    /**
+     * 定义栈的数据结构，请在该类型中实现一个能够得到栈中所含最小元素的min函数（时间复杂度应为O（1））。
+     */
+    Stack<Integer> stack = new Stack<>();
+
+    public void push2(int node) {
+        stack.push(node);
+    }
+
+    public void pop2() {
+        stack.pop();
+    }
+
+    public int top() {
+        return 0;
+
+    }
+
+    public int min() {
+        return 0;
+    }
+
+
+    /**
+     * 输入一个矩阵，按照从外向里以顺时针的顺序依次打印出每一个数字，
+     * 例如，如果输入如下4 X 4矩阵： 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
+     * 则依次打印出数字1,2,3,4,8,12,16,15,14,13,9,5,6,7,11,10.
+     */
+    public static ArrayList<Integer> printMatrix(int[][] matrix) {
+        return null;
+    }
+
+    private static ArrayList<Integer> turn(int[][] matrix) {
+        return null;
+
+    }
+
+    /**
      * 操作给定的二叉树，将其变换为源二叉树的镜像。
      */
     public void Mirror(TreeNode root) {
@@ -158,7 +239,6 @@ public class Solution {
             Mirror(root.right);
         }
     }
-
 
 
     /**
