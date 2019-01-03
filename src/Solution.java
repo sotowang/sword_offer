@@ -14,7 +14,7 @@ public class Solution {
          * 假设输入的数组的任意两个数字都互不相同。
          */
 //        int[] sequence = {3, 6, 5, 15, 20,10};
-        int[] sequence = {7,4,6,5};
+        int[] sequence = {7, 4, 6, 5};
 
         System.out.println(VerifySquenceOfBST(sequence));
 
@@ -175,6 +175,30 @@ public class Solution {
 
 
     /**
+     * 输入一棵二叉树，判断该二叉树是否是平衡二叉树。
+     */
+
+    Boolean isBalanced = true;
+    public boolean IsBalanced_Solution(TreeNode root) {
+        getDepth(root);
+        return isBalanced;
+    }
+
+    public int getDepth(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int left = getDepth(root.left);
+        int right = getDepth(root.right);
+
+        if (Math.abs(left - right) > 1) {
+            isBalanced = false;
+        }
+
+        return Math.max(left, right) + 1;
+    }
+
+    /**
      * 输入一棵二叉树，求该树的深度。
      * 从根结点到叶结点依次经过的结点（含根、叶结点）形成树的一条路径，最长路径的长度为树的深度。
      */
@@ -189,15 +213,12 @@ public class Solution {
     }
 
 
-
-
-
     /**
      * 输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历的结果。
      * 如果是则输出Yes,否则输出No。
      * 假设输入的数组的任意两个数字都互不相同。
      */
-    public static boolean VerifySquenceOfBST(int [] sequence) {
+    public static boolean VerifySquenceOfBST(int[] sequence) {
         if (sequence.length == 0) {
             return false;
         }
@@ -220,7 +241,7 @@ public class Solution {
                 return false;
             }
         }
-        return judge(start, i-1, sequence) && judge(i , end - 1, sequence);
+        return judge(start, i - 1, sequence) && judge(i, end - 1, sequence);
 
     }
 
@@ -266,7 +287,7 @@ public class Solution {
         for (int i = 0; i < pushA.length; i++) {
             stack.push(pushA[i]);
             //注意这个判定顺序
-            while (!stack.empty() && stack.peek() == popA[popIndex] ) {
+            while (!stack.empty() && stack.peek() == popA[popIndex]) {
                 stack.pop();
                 popIndex++;
             }
