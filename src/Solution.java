@@ -1,10 +1,23 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Stack;
 
 public class Solution {
 
 
     public static void main(String[] args) {
+
+        /**
+         * 输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历的结果。
+         * 如果是则输出Yes,否则输出No。
+         * 假设输入的数组的任意两个数字都互不相同。
+         */
+
+        /**
+         * 从上往下打印出二叉树的每个节点，同层节点从左至右打印。
+         */
+
 
         /**
          *
@@ -155,6 +168,34 @@ public class Solution {
 //
 //        System.out.println(arrayList);
     }
+
+
+
+    /**
+     * 从上往下打印出二叉树的每个节点，同层节点从左至右打印。
+     */
+    public ArrayList<Integer> PrintFromTopToBottom(TreeNode root) {
+        ArrayList<Integer> arrayList = new ArrayList<>();
+        if (root == null) {
+            return arrayList;
+        }
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            TreeNode treeNode = queue.poll();
+            if (treeNode.left != null) {
+                queue.offer(treeNode.left);
+            }
+            if (treeNode.right != null) {
+                queue.offer(treeNode.right);
+            }
+            arrayList.add(treeNode.val);
+
+        }
+
+        return arrayList;
+    }
+
 
     /**
      * 输入两个整数序列，第一个序列表示栈的压入顺序，请判断第二个序列是否可能为该栈的弹出顺序。假设压入栈的所有数字均不相等。
