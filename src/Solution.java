@@ -175,6 +175,24 @@ public class Solution {
 
 
     /**
+     * 输入一棵二叉树，求该树的深度。
+     * 从根结点到叶结点依次经过的结点（含根、叶结点）形成树的一条路径，最长路径的长度为树的深度。
+     */
+    public int TreeDepth(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int leftDepth = TreeDepth(root.left);
+        int rightDepth = TreeDepth(root.right);
+        return 1 + Math.max(leftDepth, rightDepth);
+
+    }
+
+
+
+
+
+    /**
      * 输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历的结果。
      * 如果是则输出Yes,否则输出No。
      * 假设输入的数组的任意两个数字都互不相同。
