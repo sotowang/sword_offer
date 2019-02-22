@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
+import java.util.*;
 
 public class Solution {
 
@@ -13,10 +10,10 @@ public class Solution {
          * 如果是则输出Yes,否则输出No。
          * 假设输入的数组的任意两个数字都互不相同。
          */
-//        int[] sequence = {3, 6, 5, 15, 20,10};
-        int[] sequence = {7, 4, 6, 5};
-
-        System.out.println(VerifySquenceOfBST(sequence));
+////        int[] sequence = {3, 6, 5, 15, 20,10};
+//        int[] sequence = {7, 4, 6, 5};
+//
+//        System.out.println(VerifySquenceOfBST(sequence));
 
         /**
          * 从上往下打印出二叉树的每个节点，同层节点从左至右打印。
@@ -171,7 +168,153 @@ public class Solution {
 //        ArrayList<Integer> arrayList = new ArrayList<>(printListFromTailToHead(head.next));
 //
 //        System.out.println(arrayList);
+//        Permutation("1223");
+//        int[] a = {2,2,2,2,2,1,3,4,5};
+//        System.out.println(MoreThanHalfNum_Solution(a));
+
+        int[] input = {4,5,1,6,2,7,3,8};
+        System.out.println(GetLeastNumbers_Solution(input, 10));
     }
+
+    /**
+     * 输入n个整数，找出其中最小的K个数。
+     * 例如输入4,5,1,6,2,7,3,8这8个数字，则最小的4个数字是1,2,3,4,。
+     */
+    public static ArrayList<Integer> GetLeastNumbers_Solution(int[] input, int k) {
+        ArrayList<Integer> arrayList = new ArrayList<>();
+        if (k < 0 || k > input.length) {
+            return arrayList;
+        }
+        for (int i = 0; i < k; i++) {
+            arrayList.add(input[i]);
+        }
+        int max = 0;
+        int index = 0;
+        for (int i = k; i < input.length; i++) {
+            for (int j = 0; j < arrayList.size(); j++) {
+                if (arrayList.get(j) > max) {
+                    max = arrayList.get(j);
+                    index = j;
+                }
+            }
+            if (max > input[i]) {
+                max = 0;
+                arrayList.set(index, input[i]);
+            }
+        }
+        return arrayList;
+    }
+
+    /**
+     * 数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。
+     * 例如输入一个长度为9的数组{1,2,3,2,2,2,5,4,2}。由于数字2在数组中出现了5次，超过数组长度的一半，因此输出2。如果不存在则输出0。
+     * @param array
+     * @return
+     */
+    public static int MoreThanHalfNum_Solution(int [] array) {
+        if (array.length == 0) {
+            return 0;
+        }
+        int key = array[0];
+        int count = 1;
+        for (int i = 1; i < array.length; i++) {
+            if (array[i] == key) {
+                count++;
+            }else
+                count--;
+
+            if (count == 0) {
+                count = 1;
+                key = array[i];
+            }
+        }
+
+        count = 0;
+        for (int i = 0; i < array.length; i++) {
+            if (key == array[i]) {
+                count++;
+            }
+        }
+        return count > array.length / 2 ? key : 0;
+    }
+
+    /**
+     * 输入一个字符串,按字典序打印出该字符串中字符的所有排列。
+     * 例如输入字符串abc,则打印出由字符a,b,c所能排列出来的所有字符串abc,acb,bac,bca,cab和cba。
+     */
+
+    public static ArrayList<String> Permutation(String str) {
+
+        ArrayList<String> list = new ArrayList<String>();
+        if(str==null || str.length()==0){
+            return list;
+        }
+        char[] chars = str.toCharArray();
+        Arrays.sort(chars);
+        list.add(String.valueOf(chars));
+        int len = chars.length;
+        while(true){
+            int lIndex = len-1;
+            int rIndex;
+            while(lIndex>=1 && chars[lIndex-1]>=chars[lIndex]){
+                lIndex--;
+            }
+            if(lIndex == 0)
+                break;
+            rIndex = lIndex;
+            while(rIndex<len && chars[rIndex]>chars[lIndex-1]){
+                rIndex++;
+            }
+            swap(chars,lIndex-1,rIndex-1);
+            reverse(chars,lIndex);
+
+            list.add(String.valueOf(chars));
+        }
+
+        return list;
+
+    }
+
+    private static void reverse(char[] chars, int k) {
+        if (chars == null || chars.length == 0) {
+            return;
+        }
+
+        int m = chars.length-1;
+        for (int i = k; i < chars.length - 1; i++) {
+            if (i <= m) {
+                swap(chars, i, m--);
+            }else
+                break;
+
+        }
+
+    }
+
+    private static void swap(char[] cs, int i, int j) {
+        char temp = cs[i];
+        cs[i] = cs[j];
+        cs[j] = temp;
+    }
+
+
+    /**
+     * 将一个字符串转换成一个整数(实现Integer.valueOf(string)的功能，但是string不符合数字要求时返回0)，要求不能使用字符串转换整数的库函数。
+     * 数值为0或者字符串不是一个合法的数值则返回0。
+     */
+//    public int StrToInt(String str) {
+//        char[] a = str.toCharArray();
+//        int sign = 0;
+//        if (str == "" || str == "0") {
+//            return 0;
+//        }
+//        if (str[0] == "-") {
+//
+//        }
+//    }
+
+
+
 
     /**
      * 请实现一个函数，用来判断一颗二叉树是不是对称的。
