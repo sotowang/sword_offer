@@ -200,6 +200,43 @@ public class Solution {
         char[] str = {'+','1','0','0'};
         System.out.println(isNumeric(str));
     }
+
+    /**
+     * 定义栈的数据结构，请在该类型中实现一个能够得到栈中所含最小元素的min函数（时间复杂度应为O（1））。
+     *
+     * @param node
+     */
+    private static Stack<Integer> stack = new Stack<>();
+    private static Stack<Integer> stackMin = new Stack<>();
+    private static Integer temp = null;
+    public void push_1(int node) {
+        if (temp != null) {
+            if (node < temp) {
+                stackMin.push(node);
+                temp = node;
+            }
+            stack.push(node);
+        }else {
+            temp = node;
+            stack.push(node);
+            stackMin.push(node);
+        }
+    }
+
+    public void pop_1() {
+        if (stack.peek() == stackMin.peek()) {
+            stackMin.pop();
+        }
+        stack.pop();
+    }
+
+    public int top_1() {
+        return stack.peek();
+    }
+
+    public int min_1() {
+        return stackMin.peek();
+    }
     /**
      * 输入两个链表，找出它们的第一个公共结点。
      */
@@ -879,14 +916,14 @@ public class Solution {
     /**
      * 定义栈的数据结构，请在该类型中实现一个能够得到栈中所含最小元素的min函数（时间复杂度应为O（1））。
      */
-    Stack<Integer> stack = new Stack<>();
+    Stack<Integer> stack11 = new Stack<>();
 
     public void push2(int node) {
-        stack.push(node);
+        stack11.push(node);
     }
 
     public void pop2() {
-        stack.pop();
+        stack11.pop();
     }
 
     public int top() {
