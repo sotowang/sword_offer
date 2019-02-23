@@ -184,9 +184,241 @@ public class Solution {
 //        System.out.println(Add(-1,-2));
 //        System.out.println(StrToInt("-123"));
 //        System.out.println(LeftRotateString("abcXYZdef",3));
-        System.out.println(ReverseSentence("student. a am I"));
-        System.out.println(ReverseSentence("I am a student."));
+//        System.out.println(ReverseSentence("student. a am I"));
+//        System.out.println(ReverseSentence("I am a student."));
+//        int[] number = {1, 0, 0, 0, 5};
+//        int[] number1 = {3,0,0,0,0};
+//        System.out.println(isContinuous(number1));
+        //
+//        System.out.println(LastRemaining_Solution(6,2));
+//        System.out.println(FirstNotRepeatingChar("absh"));
+//        System.out.println(FindContinuousSequence(15));
+
+//        int[] array = {3, 5, 8, 10, 11};
+//        System.out.println(FindNumbersWithSum(array,83));
+
+        char[] str = {'+','1','0','0'};
+        System.out.println(isNumeric(str));
     }
+    /**
+     * 输入两个链表，找出它们的第一个公共结点。
+     */
+    public static ListNode FindFirstCommonNode(ListNode pHead1, ListNode pHead2) {
+        HashMap<ListNode, Integer> hashMap = new HashMap<>();
+        while (pHead1 != null) {
+            hashMap.put(pHead1, null);
+            pHead1 = pHead1.next;
+        }
+        while ((pHead2 != null)) {
+            if (hashMap.containsKey(pHead2)) {
+                return pHead2;
+            }
+            pHead2 = pHead2.next;
+        }
+        return null;
+    }
+
+    /**
+     * 给定一棵二叉搜索树，请找出其中的第k小的结点。例如， （5，3，7，2，4，6，8）    中，按结点数值大小顺序第三小结点的值为4。
+     */
+    public static int index = 0;
+    public static TreeNode KthNode(TreeNode pRoot, int k) {
+
+        if (pRoot != null) {
+            TreeNode lnode = KthNode(pRoot.left, k);
+            if (lnode != null) {
+                return lnode;
+            }
+            index++;
+            if (index == k) {
+                return pRoot;
+            }
+            TreeNode rnode = KthNode(pRoot.right, k);
+            if (rnode != null) {
+                return rnode;
+            }
+
+        }
+
+        return null;
+
+    }
+    /**
+     * 请实现一个函数用来判断字符串是否表示数值（包括整数和小数）。例如，字符串"+100","5e2","-123","3.1416"和"-1E-16"都表示数值。
+     * 但是"12e","1a3.14","1.2.3","+-5"和"12e+4.3"都不是。
+
+    /*
+    以下对正则进行解释:
+    [\\+\\-]?            -> 正或负符号出现与否
+    \\d*                 -> 整数部分是否出现，如-.34 或 +3.34均符合
+    (\\.\\d+)?           -> 如果出现小数点，那么小数点后面必须有数字；
+                            否则一起不出现
+    ([eE][\\+\\-]?\\d+)? -> 如果存在指数部分，那么e或E肯定出现，+或-可以不出现，
+                            紧接着必须跟着整数；或者整个部分都不出现
+    */
+    public static boolean isNumeric(char[] str) {
+        String str2 = String.valueOf(str);
+        return str2.matches("[\\+\\-]?\\d*(\\.\\d+)?([eE][\\+\\-]?\\d+)?");
+    }
+    /**
+     * 输入一个递增排序的数组和一个数字S，在数组中查找两个数，使得他们的和正好是S，如果有多对数字的和等于S，输出两个数的乘积最小的。
+     */
+    public static ArrayList<Integer> FindNumbersWithSum(int [] array,int sum) {
+        ArrayList<Integer> arrayList = new ArrayList<>();
+        if (array.length == 0 || array == null) {
+            return arrayList;
+        }
+        int i = 0;
+        int j = array.length - 1;
+        while (i < j) {
+            if (array[i] + array[j] == sum) {
+                arrayList.add(array[i]);
+                arrayList.add(array[j]);
+                break;
+            } else if (array[i] + array[j] > sum) {
+                j--;
+            }else
+                i++;
+
+        }
+        return arrayList;
+    }
+
+
+
+    /**
+     * 小明很喜欢数学,有一天他在做数学作业时,要求计算出9~16的和,他马上就写出了正确答案是100。
+     * 但是他并不满足于此,他在想究竟有多少种连续的正数序列的和为100(至少包括两个数)。
+     * 没多久,他就得到另一组连续正数和为100的序列:18,19,20,21,22。现在把问题交给你,你能不能也很快的找出所有和为S的连续正数序列? Good Luck!
+     * 输出描述:
+     */
+    public static  ArrayList<ArrayList<Integer> > FindContinuousSequence(int sum) {
+
+        int begin = 1;
+        int end = 2;
+        ArrayList<ArrayList<Integer>> result  = new ArrayList<>();
+        while (end > begin) {
+
+            int add = (begin+end)*(end - begin + 1) / 2;
+            if (add < sum) {
+                end++;
+            } else if (add > sum) {
+                begin++;
+            }else {
+                ArrayList<Integer> arrayList = new ArrayList<>();
+                for (int i = begin; i <= end; i++) {
+                    arrayList.add(i);
+                }
+                result.add(arrayList);
+                begin += 2;
+                end++;
+            }
+        }
+        return result;
+    }
+    /**
+     * 在一个字符串(0<=字符串长度<=10000，全部由字母组成)中找到第一个只出现一次的字符,并返回它的位置, 如果没有则返回 -1（需要区分大小写）.
+     */
+    public static int FirstNotRepeatingChar(String str) {
+        if (str.length() == 0) {
+            return -1;
+        }
+        int[] count = new int[58];
+        for (int i = 0; i < str.length(); i++) {
+            count[str.charAt(i) - 65] += 1;
+        }
+        for (int i = 0; i < str.length(); i++) {
+            if (count[str.charAt(i)-65] == 1) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * 每年六一儿童节,牛客都会准备一些小礼物去看望孤儿院的小朋友,今年亦是如此。
+     * HF作为牛客的资深元老,自然也准备了一些小游戏。
+     * 其中,有个游戏是这样的:首先,让小朋友们围成一个大圈。
+     * 然后,他随机指定一个数m,让编号为0的小朋友开始报数。每
+     * 次喊到m-1的那个小朋友要出列唱首歌,然后可以在礼品箱中任意的挑选礼物,并且不再回到圈中,
+     * 从他的下一个小朋友开始,继续0...m-1报数....这样下去....直到剩下最后一个小朋友,可以不用表演,并且拿到牛客名贵的“名侦探柯南”典藏版(名额有限哦!!^_^)。
+     * 请你试着想下,哪个小朋友会得到这份礼品呢？(注：小朋友的编号是从0到n-1)
+     */
+    public static int LastRemaining_Solution(int n, int m) {
+        if (n < 1 || m < 1) {
+            return -1;
+        }
+        int[] array = new int[n];
+        int count = n;
+        int step = 0;
+        int i = -1;
+        while (count > 0) {
+            i++;
+            if (i >= n) {
+                i = 0;
+            }
+            if (array[i] != -1) {
+                step++;
+            }
+            if (step == m) {
+                count--;
+                step = 0;
+                array[i] = -1;
+            }
+        }
+        return i;
+    }
+    /**
+     * LL今天心情特别好,因为他去买了一副扑克牌,发现里面居然有2个大王,2个小王(一副牌原本是54张^_^)...
+     * 他随机从中抽出了5张牌,想测测自己的手气,看看能不能抽到顺子,如果抽到的话,他决定去买体育彩票,嘿嘿！！
+     * “红心A,黑桃3,小王,大王,方片5”,“Oh My God!”不是顺子.....LL不高兴了,他想了想,决定大\小 王可以看成任何数字,并且A看作1,J为11,Q为12,K为13。上
+     * 面的5张牌就可以变成“1,2,3,4,5”(大小王分别看作2和4),“So Lucky!”。LL决定去买体育彩票啦。
+     * 现在,要求你使用这幅牌模拟上面的过程,然后告诉我们LL的运气如何， 如果牌能组成顺子就输出true，否则就输出false。
+     * 为了方便起见,你可以认为大小王是0。
+     */
+    public static boolean isContinuous(int [] numbers) {
+        if (numbers.length != 5) {
+            return false;
+        }
+        int max = -1;
+        int min = 14;
+        Arrays.sort(numbers);
+        for (int number : numbers) {
+            if (number > 13 || number < 0) {
+                return false;
+            }else if (number != 0){
+                if (number > max) {
+                    max = number;
+                }
+                if (number < min) {
+                    min = number;
+                }
+            }
+
+        }
+        if (max - min > 4) {
+            return false;
+        }
+        int numOfZero = 0;
+        int interval = 0;
+        for (int i = 0; i < numbers.length-1; i++) {
+            if (numbers[i] == 0) {
+                numOfZero++;
+                continue;
+            }
+            if (numbers[i + 1] == numbers[i]) {
+                return false;
+            }
+            interval += numbers[i + 1] - numbers[i] - 1;
+
+        }
+        if (numOfZero >= interval) {
+            return true;
+        }
+        return false;
+
+    }
+
 
     /**
      * 牛客最近来了一个新员工Fish，每天早晨总是会拿着一本英文杂志，写些句子在本子上。
