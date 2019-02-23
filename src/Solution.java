@@ -174,10 +174,127 @@ public class Solution {
 
 //        int[] input = {4,5,1,6,2,7,3,8};
 //        System.out.println(GetLeastNumbers_Solution(input, 10));
-        int[] array = {6, -3, -2, 7, -15, 1, 2, 2};
-        int[] array2 = {-2,-8,-1,-5,-9};
-        int[] array3 = {1,-2,3,10,-4,7,2,-5};
-        System.out.println(FindGreatestSumOfSubArray(array));
+//        int[] array = {6, -3, -2, 7, -15, 1, 2, 2};
+//        int[] array2 = {-2,-8,-1,-5,-9};
+//        int[] array3 = {1,-2,3,10,-4,7,2,-5};
+//        System.out.println(FindGreatestSumOfSubArray(array));
+
+//        System.out.println(Sum_Solution(3));
+        //
+//        System.out.println(Add(-1,-2));
+//        System.out.println(StrToInt("-123"));
+//        System.out.println(LeftRotateString("abcXYZdef",3));
+        System.out.println(ReverseSentence("student. a am I"));
+        System.out.println(ReverseSentence("I am a student."));
+    }
+
+    /**
+     * 牛客最近来了一个新员工Fish，每天早晨总是会拿着一本英文杂志，写些句子在本子上。
+     * 同事Cat对Fish写的内容颇感兴趣，有一天他向Fish借来翻看，但却读不懂它的意思。
+     * 例如，“student. a am I”。后来才意识到，这家伙原来把句子单词的顺序翻转了，正确的句子应该是“I am a student.”。
+     * Cat对一一的翻转这些单词顺序可不在行，你能帮助他么？
+     * @param str
+     * @return
+     */
+    public static String ReverseSentence(String str) {
+        if (str.trim().equals("")) {
+            return str;
+        }
+        String[] strings = str.split(" ");
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = strings.length-1; i >= 0; i--) {
+            stringBuilder.append(strings[i]);
+            if (i > 0) {
+                stringBuilder.append(" ");
+            }
+        }
+
+        return stringBuilder.toString();
+
+    }
+
+    /**
+     * 链接：https://www.nowcoder.com/questionTerminal/12d959b108cb42b1ab72cef4d36af5ec
+     * 来源：牛客网
+     * <p>
+     * 汇编语言中有一种移位指令叫做循环左移（ROL），现在有个简单的任务，就是用字符串模拟这个指令的运算结果。
+     * 对于一个给定的字符序列S，请你把其循环左移K位后的序列输出。
+     * 例如，字符序列S=”abcXYZdef”,要求输出循环左移3位后的结果，即“XYZdefabc”。是不是很简单？OK，搞定它！
+     */
+    public static String LeftRotateString(String str, int n) {
+        if (str == "" || str == null || str.length() == 0) {
+            return "";
+        }
+        int len = str.length();
+        str += str;
+        return str.substring(n, len+n);
+    }
+
+
+
+    /**
+     * 将一个字符串转换成一个整数(实现Integer.valueOf(string)的功能，但是string不符合数字要求时返回0)，要求不能使用字符串转换整数的库函数。
+     * 数值为0或者字符串不是一个合法的数值则返回0。
+     * 输入描述:
+     * 输入一个字符串,包括数字字母符号,可以为空
+     * 输出描述:
+     * 如果是合法的数值表达则返回该数字，否则返回0
+     */
+    public static int StrToInt(String str) {
+        if (str == null || str.length() == 0) {
+            return 0;
+        }
+        char[] chars = str.toCharArray();
+        if (str.length() == 1) {
+            if (chars[0] <= '9' && chars[0] >= '0') {
+                return chars[0] - '0';
+            }
+        }
+        int flag = 1;
+        int num = 0;
+        if (chars[0] == '-') {
+            flag = -1;
+        } else if (chars[0] == '+') {
+            flag = 1;
+        } else if (chars[0] <= '9' && chars[0] >= '0') {
+            num += (chars[0] - '0');
+        } else
+            return 0;
+
+        for (int i = 1; i < chars.length; i++) {
+            if (chars[i] <= '9' && chars[i] >= '0') {
+                num = num * 10 + (chars[i] - '0');
+            }else
+                return 0;
+        }
+        return num * flag;
+
+    }
+    /**
+     * 写一个函数，求两个整数之和，要求在函数体内不得使用+、-、*、/四则运算符号。
+     */
+    public static int Add(int num1,int num2) {
+        int a = num1 ^ num2;
+        int b = (num1 & num2) << 1;
+
+        return a+b;
+    }
+    /**
+     * 求1+2+3+...+n，要求不能使用乘除法、for、while、if、else、switch、case等关键字及条件判断语句（A?B:C）。
+     */
+    public static int Sum_Solution(int n) {
+        int sum = n;
+        boolean a = (n > 0) && ((sum += Sum_Solution(n - 1)) > 0);
+        return sum;
+    }
+
+    /**
+     * 求出1~13的整数中1出现的次数,并算出100~1300的整数中1出现的次数？
+     * 为此他特别数了一下1~13中包含1的数字有1、10、11、12、13因此共出现6次,但是对于后面问题他就没辙了。
+     * ACMer希望你们帮帮他,并把问题更加普遍化,可以很快的求出任意非负整数区间中1出现的次数（从1 到 n 中1出现的次数）。
+     */
+    public static int NumberOf1Between1AndN_Solution(int n) {
+        return 0;
     }
 
     /**
