@@ -197,9 +197,280 @@ public class Solution {
 //        int[] array = {3, 5, 8, 10, 11};
 //        System.out.println(FindNumbersWithSum(array,83));
 
-        char[] str = {'+','1','0','0'};
-        System.out.println(isNumeric(str));
+//        char[] str = {'+', '1', '0', '0'};
+//        System.out.println(isNumeric(str));
+        TreeNode p8 = new TreeNode(8);
+        TreeNode p6 = new TreeNode(6);
+        TreeNode p10 = new TreeNode(10);
+        TreeNode p5 = new TreeNode(5);
+        TreeNode p7 = new TreeNode(7);
+        TreeNode p9 = new TreeNode(9);
+        TreeNode p11 = new TreeNode(11);
+        p8.left = p6;
+        p8.right = p10;
+        p6.left = p5;
+        p6.right = p7;
+        p10.left = p9;
+        p10.right = p11;
+
+//        System.out.println(Print_1(p8));
+        //
+//        System.out.println(Print_2(p8));
+
+//        int[] array = {1,3,3,3,3,4,5};
+//        int[] num1 = new int[1];
+//        int[] num2 = new int[1];
+//        FindNumsAppearOnce(array, num1, num2);
+//        System.out.println(num1[0]);
+//        System.out.println(num2[0]);
+
+//        System.out.println(GetNumberOfK(array,2));
+
+        int[] numbers = {3, 32, 321};
+        System.out.println(PrintMinNumber(numbers));
+
     }
+    /**
+     * 给一个链表，若其中包含环，请找出该链表的环的入口结点，否则，输出null。
+     */
+    public static  ListNode EntryNodeOfLoop(ListNode pHead) {
+        if (pHead.next == null) {
+            return null;
+        }
+        ListNode pnode = pHead.next;
+        ListNode previous = pHead;
+        while (pnode != null) {
+            previous.next = null;
+            previous = pnode;
+            pnode = pnode.next;
+        }
+        return previous;
+    }
+
+    /**
+     * 输入一个正整数数组，把数组里所有数字拼接起来排成一个数，
+     * 打印能拼接出的所有数字中最小的一个。
+     * 例如输入数组{3，32，321}，则打印出这三个数字能排成的最小数字为321323。
+     */
+    public static String PrintMinNumber(int[] numbers) {
+        ArrayList<Integer> arrayList = new ArrayList<>();
+        for (int i = 0; i < numbers.length; i++) {
+            arrayList.add(numbers[i]);
+        }
+        Collections.sort(arrayList, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                String str1 = o1 + "" + o2;
+                String str2 = o2 + "" + o1;
+                return str1.compareTo(str2);
+            }
+        });
+        String s = "";
+        for (int num : arrayList) {
+            s += num + "";
+        }
+        return s;
+
+    }
+    /**
+     * 统计一个数字在排序数组中出现的次数。
+     */
+    public static int GetNumberOfK(int [] array , int k) {
+        if (array.length == 0) {
+            return 0;
+        }
+        int mid = binarySearch(array, k);
+        if (mid == -1) {
+            return 0;
+        }
+        int start = mid;
+        int end = mid;
+        while (start >= 0 && array[start] == k ) {
+            start--;
+        }
+        while (end < array.length && array[end] == k) {
+            end++;
+        }
+        return end - start - 1;
+    }
+
+    private static int binarySearch(int[] array, int k) {
+        int low  = 0;
+        int high = array.length - 1;
+        int mid;
+        while (low <= high) {
+            mid = (low + high) / 2;
+            if (array[mid] > k) {
+                high = mid - 1;
+            } else if (array[mid] < k) {
+                low = mid + 1;
+
+            } else {
+                return mid;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * 一个整型数组里除了两个数字之外，其他的数字都出现了偶数次。请写程序找出这两个只出现一次的数字。
+     */
+
+    //num1,num2分别为长度为1的数组。传出参数
+    //将num1[0],num2[0]设置为返回结果
+    public static void FindNumsAppearOnce(int [] array,int num1[] , int num2[]) {
+        Arrays.sort(array);
+        ArrayList<Integer> arrayList = new ArrayList<>();
+        for (int i = 0; i < array.length; i++) {
+            if (i+1<array.length && array[i] == array[i + 1] ) {
+                i++;
+            }else
+                arrayList.add(array[i]);
+        }
+        num1[0] = arrayList.get(0);
+        num2[0] = arrayList.get(1);
+    }
+
+    /**
+     * 从上到下按层打印二叉树，同一层结点从左至右输出。每一层输出一行。
+     */
+    static ArrayList<ArrayList<Integer> > Print_2(TreeNode pRoot) {
+        ArrayList<ArrayList<Integer>> result = new ArrayList<>();
+        if (pRoot == null) {
+            return result;
+        }
+        ArrayList<Integer> arrayList = new ArrayList<>();
+        LinkedList<TreeNode> queue = new LinkedList<>();
+        queue.addLast(pRoot);
+
+        int start = 0;
+        int end = 1;
+        while (!queue.isEmpty()) {
+            TreeNode pnode =  queue.removeFirst();
+            arrayList.add(pnode.val);
+            start++;
+
+            if (pnode.left != null) {
+                queue.add(pnode.left);
+            }
+            if (pnode.right != null) {
+                queue.add(pnode.right);
+            }
+            if (start == end) {
+                start = 0;
+                end = queue.size();
+                result.add(new ArrayList<>(arrayList));
+                arrayList.clear();
+            }
+        }
+        return result;
+    }
+    /**
+     * 请实现一个函数按照之字形打印二叉树，即第一行按照从左到右的顺序打印，
+     * 第二层按照从右至左的顺序打印，第三行按照从左到右的顺序打印，其他行以此类推。
+     */
+    public static ArrayList<ArrayList<Integer> > Print_1(TreeNode pRoot) {
+        ArrayList<ArrayList<Integer>> result = new ArrayList<>();
+        if (pRoot == null) {
+            return result;
+        }
+        ArrayList<Integer> arrayList = new ArrayList<>();
+        LinkedList<TreeNode> queue = new LinkedList<>();
+        queue.addLast(null);
+        queue.addLast(pRoot);
+
+        boolean left2right = true;
+
+        while (queue.size() !=1) {
+            TreeNode node = queue.removeFirst();
+            if (node == null) {
+                Iterator<TreeNode> iterator = null;
+                if (left2right) {
+                    iterator = queue.iterator();
+                } else {
+                    iterator = queue.descendingIterator();
+                }
+                left2right = !left2right;
+                while (iterator.hasNext()) {
+                    arrayList.add(iterator.next().val);
+                }
+                result.add(new ArrayList<Integer>(arrayList));
+                arrayList.clear();
+                queue.addLast(null);
+                continue;
+            }
+            if (node.left != null) {
+                queue.add(node.left);
+            }
+            if (node.right != null) {
+                queue.add(node.right);
+            }
+
+        }
+        return result;
+    }
+
+
+    /**
+     * 给定一个二叉树和其中的一个结点，请找出中序遍历顺序的下一个结点并且返回。
+     * 注意，树中的结点不仅包含左右子结点，同时包含指向父结点的指针。
+     */
+
+    public TreeLinkNode GetNext(TreeLinkNode pNode) {
+        if (pNode == null) {
+            return null;
+        }
+        if (pNode.right != null) {
+            pNode = pNode.right;
+            while (pNode.left != null) {
+                pNode = pNode.left;
+            }
+            return pNode;
+        }
+        while (pNode.next != null) {
+            if (pNode.next.left == pNode) {
+                return pNode.next;
+            }
+            pNode = pNode.next;
+        }
+        return null;
+
+
+    }
+
+
+    /**
+     * 请实现两个函数，分别用来序列化和反序列化二叉树
+     */
+    int index_2 = -1;
+
+    String Serialize(TreeNode root) {
+        StringBuilder stringBuilder = new StringBuilder();
+        if (root == null) {
+            stringBuilder.append("#,");
+            return stringBuilder.toString();
+        }
+        stringBuilder.append(root.val + ",");
+        stringBuilder.append(Serialize(root.left));
+
+        stringBuilder.append(Serialize(root.right));
+        return stringBuilder.toString();
+
+    }
+
+    TreeNode Deserialize(String str) {
+        index_2++;
+        String[] strings = str.split(",");
+        TreeNode root = null;
+        if (!strings[index_2].equals("#")) {
+            root = new TreeNode(Integer.valueOf(strings[index_2]));
+            root.left = Deserialize(str);
+            root.right = Deserialize(str);
+        }
+        return root;
+
+    }
+
 
     /**
      * 定义栈的数据结构，请在该类型中实现一个能够得到栈中所含最小元素的min函数（时间复杂度应为O（1））。
@@ -209,6 +480,7 @@ public class Solution {
     private static Stack<Integer> stack = new Stack<>();
     private static Stack<Integer> stackMin = new Stack<>();
     private static Integer temp = null;
+
     public void push_1(int node) {
         if (temp != null) {
             if (node < temp) {
@@ -216,7 +488,7 @@ public class Solution {
                 temp = node;
             }
             stack.push(node);
-        }else {
+        } else {
             temp = node;
             stack.push(node);
             stackMin.push(node);
@@ -237,6 +509,7 @@ public class Solution {
     public int min_1() {
         return stackMin.peek();
     }
+
     /**
      * 输入两个链表，找出它们的第一个公共结点。
      */
@@ -259,6 +532,7 @@ public class Solution {
      * 给定一棵二叉搜索树，请找出其中的第k小的结点。例如， （5，3，7，2，4，6，8）    中，按结点数值大小顺序第三小结点的值为4。
      */
     public static int index = 0;
+
     public static TreeNode KthNode(TreeNode pRoot, int k) {
 
         if (pRoot != null) {
@@ -280,27 +554,29 @@ public class Solution {
         return null;
 
     }
+
     /**
      * 请实现一个函数用来判断字符串是否表示数值（包括整数和小数）。例如，字符串"+100","5e2","-123","3.1416"和"-1E-16"都表示数值。
      * 但是"12e","1a3.14","1.2.3","+-5"和"12e+4.3"都不是。
-
-    /*
-    以下对正则进行解释:
-    [\\+\\-]?            -> 正或负符号出现与否
-    \\d*                 -> 整数部分是否出现，如-.34 或 +3.34均符合
-    (\\.\\d+)?           -> 如果出现小数点，那么小数点后面必须有数字；
-                            否则一起不出现
-    ([eE][\\+\\-]?\\d+)? -> 如果存在指数部分，那么e或E肯定出现，+或-可以不出现，
-                            紧接着必须跟着整数；或者整个部分都不出现
-    */
+     * <p>
+     * /*
+     * 以下对正则进行解释:
+     * [\\+\\-]?            -> 正或负符号出现与否
+     * \\d*                 -> 整数部分是否出现，如-.34 或 +3.34均符合
+     * (\\.\\d+)?           -> 如果出现小数点，那么小数点后面必须有数字；
+     * 否则一起不出现
+     * ([eE][\\+\\-]?\\d+)? -> 如果存在指数部分，那么e或E肯定出现，+或-可以不出现，
+     * 紧接着必须跟着整数；或者整个部分都不出现
+     */
     public static boolean isNumeric(char[] str) {
         String str2 = String.valueOf(str);
         return str2.matches("[\\+\\-]?\\d*(\\.\\d+)?([eE][\\+\\-]?\\d+)?");
     }
+
     /**
      * 输入一个递增排序的数组和一个数字S，在数组中查找两个数，使得他们的和正好是S，如果有多对数字的和等于S，输出两个数的乘积最小的。
      */
-    public static ArrayList<Integer> FindNumbersWithSum(int [] array,int sum) {
+    public static ArrayList<Integer> FindNumbersWithSum(int[] array, int sum) {
         ArrayList<Integer> arrayList = new ArrayList<>();
         if (array.length == 0 || array == null) {
             return arrayList;
@@ -314,13 +590,12 @@ public class Solution {
                 break;
             } else if (array[i] + array[j] > sum) {
                 j--;
-            }else
+            } else
                 i++;
 
         }
         return arrayList;
     }
-
 
 
     /**
@@ -329,19 +604,19 @@ public class Solution {
      * 没多久,他就得到另一组连续正数和为100的序列:18,19,20,21,22。现在把问题交给你,你能不能也很快的找出所有和为S的连续正数序列? Good Luck!
      * 输出描述:
      */
-    public static  ArrayList<ArrayList<Integer> > FindContinuousSequence(int sum) {
+    public static ArrayList<ArrayList<Integer>> FindContinuousSequence(int sum) {
 
         int begin = 1;
         int end = 2;
-        ArrayList<ArrayList<Integer>> result  = new ArrayList<>();
+        ArrayList<ArrayList<Integer>> result = new ArrayList<>();
         while (end > begin) {
 
-            int add = (begin+end)*(end - begin + 1) / 2;
+            int add = (begin + end) * (end - begin + 1) / 2;
             if (add < sum) {
                 end++;
             } else if (add > sum) {
                 begin++;
-            }else {
+            } else {
                 ArrayList<Integer> arrayList = new ArrayList<>();
                 for (int i = begin; i <= end; i++) {
                     arrayList.add(i);
@@ -353,6 +628,7 @@ public class Solution {
         }
         return result;
     }
+
     /**
      * 在一个字符串(0<=字符串长度<=10000，全部由字母组成)中找到第一个只出现一次的字符,并返回它的位置, 如果没有则返回 -1（需要区分大小写）.
      */
@@ -365,7 +641,7 @@ public class Solution {
             count[str.charAt(i) - 65] += 1;
         }
         for (int i = 0; i < str.length(); i++) {
-            if (count[str.charAt(i)-65] == 1) {
+            if (count[str.charAt(i) - 65] == 1) {
                 return i;
             }
         }
@@ -405,6 +681,7 @@ public class Solution {
         }
         return i;
     }
+
     /**
      * LL今天心情特别好,因为他去买了一副扑克牌,发现里面居然有2个大王,2个小王(一副牌原本是54张^_^)...
      * 他随机从中抽出了5张牌,想测测自己的手气,看看能不能抽到顺子,如果抽到的话,他决定去买体育彩票,嘿嘿！！
@@ -413,7 +690,7 @@ public class Solution {
      * 现在,要求你使用这幅牌模拟上面的过程,然后告诉我们LL的运气如何， 如果牌能组成顺子就输出true，否则就输出false。
      * 为了方便起见,你可以认为大小王是0。
      */
-    public static boolean isContinuous(int [] numbers) {
+    public static boolean isContinuous(int[] numbers) {
         if (numbers.length != 5) {
             return false;
         }
@@ -423,7 +700,7 @@ public class Solution {
         for (int number : numbers) {
             if (number > 13 || number < 0) {
                 return false;
-            }else if (number != 0){
+            } else if (number != 0) {
                 if (number > max) {
                     max = number;
                 }
@@ -438,7 +715,7 @@ public class Solution {
         }
         int numOfZero = 0;
         int interval = 0;
-        for (int i = 0; i < numbers.length-1; i++) {
+        for (int i = 0; i < numbers.length - 1; i++) {
             if (numbers[i] == 0) {
                 numOfZero++;
                 continue;
@@ -462,6 +739,7 @@ public class Solution {
      * 同事Cat对Fish写的内容颇感兴趣，有一天他向Fish借来翻看，但却读不懂它的意思。
      * 例如，“student. a am I”。后来才意识到，这家伙原来把句子单词的顺序翻转了，正确的句子应该是“I am a student.”。
      * Cat对一一的翻转这些单词顺序可不在行，你能帮助他么？
+     *
      * @param str
      * @return
      */
@@ -471,7 +749,7 @@ public class Solution {
         }
         String[] strings = str.split(" ");
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = strings.length-1; i >= 0; i--) {
+        for (int i = strings.length - 1; i >= 0; i--) {
             stringBuilder.append(strings[i]);
             if (i > 0) {
                 stringBuilder.append(" ");
@@ -496,9 +774,8 @@ public class Solution {
         }
         int len = str.length();
         str += str;
-        return str.substring(n, len+n);
+        return str.substring(n, len + n);
     }
-
 
 
     /**
@@ -533,21 +810,23 @@ public class Solution {
         for (int i = 1; i < chars.length; i++) {
             if (chars[i] <= '9' && chars[i] >= '0') {
                 num = num * 10 + (chars[i] - '0');
-            }else
+            } else
                 return 0;
         }
         return num * flag;
 
     }
+
     /**
      * 写一个函数，求两个整数之和，要求在函数体内不得使用+、-、*、/四则运算符号。
      */
-    public static int Add(int num1,int num2) {
+    public static int Add(int num1, int num2) {
         int a = num1 ^ num2;
         int b = (num1 & num2) << 1;
 
-        return a+b;
+        return a + b;
     }
+
     /**
      * 求1+2+3+...+n，要求不能使用乘除法、for、while、if、else、switch、case等关键字及条件判断语句（A?B:C）。
      */
@@ -574,22 +853,22 @@ public class Solution {
      * 给一个数组，返回它的最大连续子序列的和，你会不会被他忽悠住？(子向量的长度至少是1)
      */
     public static int FindGreatestSumOfSubArray(int[] array) {
-            if (array.length == 0) {
-                return 0;
+        if (array.length == 0) {
+            return 0;
+        }
+        int max = array[0];
+        int sum = array[0];
+        for (int i = 1; i < array.length; i++) {
+            sum += array[i];
+            if (sum < 0) {
+                sum = array[++i];
             }
-            int max = array[0];
-            int sum = array[0];
-            for (int i = 1; i < array.length; i++) {
-                sum += array[i];
-                if (sum < 0) {
-                    sum = array[++i];
-                }
-                if (sum > max) {
-                    max = sum;
-                }
+            if (sum > max) {
+                max = sum;
             }
+        }
 
-            return max;
+        return max;
 
 
     }
@@ -627,10 +906,11 @@ public class Solution {
     /**
      * 数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。
      * 例如输入一个长度为9的数组{1,2,3,2,2,2,5,4,2}。由于数字2在数组中出现了5次，超过数组长度的一半，因此输出2。如果不存在则输出0。
+     *
      * @param array
      * @return
      */
-    public static int MoreThanHalfNum_Solution(int [] array) {
+    public static int MoreThanHalfNum_Solution(int[] array) {
         if (array.length == 0) {
             return 0;
         }
@@ -639,7 +919,7 @@ public class Solution {
         for (int i = 1; i < array.length; i++) {
             if (array[i] == key) {
                 count++;
-            }else
+            } else
                 count--;
 
             if (count == 0) {
@@ -665,27 +945,27 @@ public class Solution {
     public static ArrayList<String> Permutation(String str) {
 
         ArrayList<String> list = new ArrayList<String>();
-        if(str==null || str.length()==0){
+        if (str == null || str.length() == 0) {
             return list;
         }
         char[] chars = str.toCharArray();
         Arrays.sort(chars);
         list.add(String.valueOf(chars));
         int len = chars.length;
-        while(true){
-            int lIndex = len-1;
+        while (true) {
+            int lIndex = len - 1;
             int rIndex;
-            while(lIndex>=1 && chars[lIndex-1]>=chars[lIndex]){
+            while (lIndex >= 1 && chars[lIndex - 1] >= chars[lIndex]) {
                 lIndex--;
             }
-            if(lIndex == 0)
+            if (lIndex == 0)
                 break;
             rIndex = lIndex;
-            while(rIndex<len && chars[rIndex]>chars[lIndex-1]){
+            while (rIndex < len && chars[rIndex] > chars[lIndex - 1]) {
                 rIndex++;
             }
-            swap(chars,lIndex-1,rIndex-1);
-            reverse(chars,lIndex);
+            swap(chars, lIndex - 1, rIndex - 1);
+            reverse(chars, lIndex);
 
             list.add(String.valueOf(chars));
         }
@@ -699,11 +979,11 @@ public class Solution {
             return;
         }
 
-        int m = chars.length-1;
+        int m = chars.length - 1;
         for (int i = k; i < chars.length - 1; i++) {
             if (i <= m) {
                 swap(chars, i, m--);
-            }else
+            } else
                 break;
 
         }
@@ -731,8 +1011,6 @@ public class Solution {
 //
 //        }
 //    }
-
-
 
 
     /**
@@ -781,12 +1059,7 @@ public class Solution {
 
     }
 
-    /**
-     * 一个整型数组里除了两个数字之外，其他的数字都出现了偶数次。请写程序找出这两个只出现一次的数字。
-     */
-    public void FindNumsAppearOnce(int[] array, int num1[], int num2[]) {
 
-    }
 
     /**
      * 输入一棵二叉树，判断该二叉树是否是平衡二叉树。
