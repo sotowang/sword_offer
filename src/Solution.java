@@ -233,10 +233,41 @@ public class Solution {
 
 //        System.out.println(FindPath(p8, 21));
 
-        System.out.println(Convert(p8));
+//        System.out.println(Convert(p8));
+        int start =3;
+        int end = 6;
+        System.out.println((start + end) >>1);
 
 
     }
+
+    /**
+     * 在数组中的两个数字，如果前面一个数字大于后面的数字，则这两个数字组成一个逆序对。输入一个数组,求出这个数组中的逆序对的总数P。并将P对1000000007取模的结果输出。
+     * 即输出P%1000000007
+     * 输入描述:
+     * 题目保证输入的数组中没有的相同的数字
+     *
+     * 数据范围：
+     *
+     * 	对于%50的数据,size<=10^4
+     *
+     * 	对于%75的数据,size<=10^5
+     *
+     * 	对于%100的数据,size<=2*10^5
+     */
+    //链接：https://www.nowcoder.com/questionTerminal/96bd6684e04a44eb80e6a68efc0ec6c5
+    //来源：牛客网
+    //
+    //过程：先把数组分割成子数组，先统计出子数组内部的逆序对的数目，然后再统计出两个相邻子数组之间的逆序对的数目。
+    // 在统计逆序对的过程中，还需要对数组进行排序。
+    // 如果对排序算法很熟悉，我们不难发现这个过程实际上就是归并排序。
+    public int InversePairs(int [] array) {
+        if (array.length == 0 || array == null) {
+            return 0;
+        }
+        return 0;
+     }
+
 
     /**
      * 输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的结点，只能调整树中结点指针的指向。
