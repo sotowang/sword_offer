@@ -1,3 +1,5 @@
+import sun.reflect.generics.tree.Tree;
+
 import java.util.*;
 
 public class Solution {
@@ -226,10 +228,71 @@ public class Solution {
 
 //        System.out.println(GetNumberOfK(array,2));
 
-        int[] numbers = {3, 32, 321};
-        System.out.println(PrintMinNumber(numbers));
+//        int[] numbers = {3, 32, 321};
+//        System.out.println(PrintMinNumber(numbers));
+
+//        System.out.println(FindPath(p8, 21));
+
+        System.out.println(Convert(p8));
+
 
     }
+
+    /**
+     * 输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的结点，只能调整树中结点指针的指向。
+     */
+    public static TreeNode Convert(TreeNode pRootOfTree) {
+        if (pRootOfTree == null) {
+            return null;
+        }
+        boolean isFirst = true;
+        TreeNode pre = null;
+        Stack<TreeNode> s = new Stack();
+        TreeNode p = pRootOfTree;
+        while (p != null || !s.isEmpty()) {
+            while (p != null) {
+                s.push(p);
+                p = p.left;
+            }
+            if (!s.isEmpty()) {
+                p = s.pop();
+            }
+            if (isFirst) {
+                pRootOfTree = p;
+                pre = pRootOfTree;
+                isFirst = false;
+            } else {
+                pre.right = p;
+                p.left = pre;
+                pre = p;
+            }
+
+            p = p.right;
+        }
+        return pRootOfTree;
+    }
+    /**
+     * 输入一颗二叉树的跟节点和一个整数，打印出二叉树中结点值的和为输入整数的所有路径。
+     * 路径定义为从树的根结点开始往下一直到叶结点所经过的结点形成一条路径。(注意: 在返回值的list中，数组长度大的数组靠前)
+     */
+    private static ArrayList<Integer> arrayList_f = new ArrayList<>();
+    private static ArrayList<ArrayList<Integer>> result = new ArrayList<>();
+    public static ArrayList<ArrayList<Integer>> FindPath(TreeNode root, int target) {
+        if (root == null) {
+            return result;
+        }
+        arrayList_f.add(root.val);
+        target = target - root.val;
+        if (target == 0 && root.left == null && root.right == null) {
+            result.add(new ArrayList<>(arrayList_f));
+        }
+        FindPath(root.left, target);
+        FindPath(root.right, target);
+        arrayList_f.remove(arrayList_f.size() - 1);
+        return result;
+
+    }
+
     /**
      * 给一个链表，若其中包含环，请找出该链表的环的入口结点，否则，输出null。
      */
