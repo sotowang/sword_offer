@@ -236,7 +236,9 @@ public class Solution {
 //        System.out.println(Convert(p8));
         int start =3;
         int end = 6;
-        System.out.println((start + end) >>1);
+//        System.out.println((start + end) >>1);
+
+        System.out.println(NumberOf1Between1AndN_Solution(531));
 
 
     }
@@ -267,6 +269,73 @@ public class Solution {
         }
         return 0;
      }
+    /**
+     *输入一个复杂链表（每个节点中有节点值，以及两个指针，一个指向下一个节点，另一个特殊指针指向任意一个节点），返回结果为复制后复杂链表的head。
+     * （注意，输出结果中请不要返回参数中的节点引用，否则判题程序会直接返回空）
+     */
+    public RandomListNode Clone(RandomListNode pHead) {
+
+        if (pHead == null) {
+            return null;
+        }
+        RandomListNode p = pHead;
+        while (p != null) {
+            RandomListNode colonNode = new RandomListNode(p.label);
+            colonNode.next = p.next;
+            p.next = colonNode;
+            p = colonNode.next;
+        }
+        p = pHead;
+        while (p != null) {
+            if (p.random != null) {
+                p.next.random = p.random.next;
+            }
+            p = p.next.next;
+        }
+        RandomListNode head = pHead.next;
+        RandomListNode q = pHead.next;
+        p = pHead;
+        while (p != null) {
+            p.next = p.next.next;
+            if (q.next != null) {
+                q.next = q.next.next;
+            }
+            q = q.next;
+            p = p.next;
+
+        }
+
+        return head;
+
+
+
+
+
+    }
+
+
+    /**
+     * 求出1~13的整数中1出现的次数,并算出100~1300的整数中1出现的次数？为此他特别数了一下1~13中包含1的数字有1、10、11、12、13因此共出现6次,但是对于后面问题他就没辙了。
+     * ACMer希望你们帮帮他,并把问题更加普遍化,可以很快的求出任意非负整数区间中1出现的次数（从1 到 n 中1出现的次数）。
+     */
+    public static  int NumberOf1Between1AndN_Solution(int n) {
+            if(n<1)
+                return 0;
+            int count = 0;
+            int base = 1;
+            int round = n;
+            while(round>0){
+                int weight = round%10;
+                round/=10;
+                count += round*base;
+                if(weight==1)
+                    count+=(n%base)+1;
+                else if(weight>1)
+                    count+=base;
+                base*=10;
+            }
+            return count;
+    }
 
 
     /**
@@ -930,14 +999,6 @@ public class Solution {
         return sum;
     }
 
-    /**
-     * 求出1~13的整数中1出现的次数,并算出100~1300的整数中1出现的次数？
-     * 为此他特别数了一下1~13中包含1的数字有1、10、11、12、13因此共出现6次,但是对于后面问题他就没辙了。
-     * ACMer希望你们帮帮他,并把问题更加普遍化,可以很快的求出任意非负整数区间中1出现的次数（从1 到 n 中1出现的次数）。
-     */
-    public static int NumberOf1Between1AndN_Solution(int n) {
-        return 0;
-    }
 
     /**
      * HZ偶尔会拿些专业问题来忽悠那些非计算机专业的同学。
