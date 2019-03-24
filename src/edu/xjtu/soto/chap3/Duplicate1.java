@@ -7,7 +7,7 @@ import java.util.Arrays;
  *
  * 例如：如果输入长度为7的数组{2,3,1,0,2,5,3}那么对应的输出是重复的数字2或者3
  */
-public class Duplicate {
+public class Duplicate1 {
 
     /**
      * 1,通过数组排序
@@ -73,11 +73,12 @@ public class Duplicate {
     public static void main(String[] args) {
         int[] arrays1 = {2, 3, 1, 0, 2, 5, 3};
         int[] arrays2 = null;
-        Duplicate duplicate = new Duplicate();
+        int[] arrays3 = {2, 3, 1, 0, 2, 7, 3};
+        Duplicate1 duplicate = new Duplicate1();
         int legnth = 7;
         int[] a = new int[7];
 //        duplicate.duplicate1(arrays2, legnth, a);
-        duplicate.duplicate2(arrays1, legnth, a);
+        duplicate.duplicate2(arrays3, legnth, a);
         System.out.println(a[0]);
 
     }
