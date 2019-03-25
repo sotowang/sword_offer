@@ -385,8 +385,48 @@ public  ArrayList<Integer> printListFromTailToHead2(ListNode listNode) {
 
 题目：输入某二叉树的前序遍历和中序遍历的结果，请重建该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。例如，输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4，7，2，1，5，3，8，6}，则重建二叉树并输入它的头节点，二叉树和定义如下：
 
+```java
+
+public class TreeNode {
+    
+    public int val = 0;
+    public TreeNode left = null;
+    public TreeNode right = null;
+
+    public TreeNode(int val) {
+        this.val = val;
+
+    }
+}
 ```
 
+## 递归
+
+```java
+ public TreeNode reconstructBinaryTree(int[] preOrder, int[] inOrder) {
+        if (preOrder == null || inOrder == null || preOrder.length == 0 || inOrder.length == 0) {
+            return null;
+        }
+
+        return construct(preOrder,0,preOrder.length-1,inOrder, 0, inOrder.length-1);
+
+    }
+
+    private TreeNode construct(int[] preOrder, int startPre, int endPre, int[] intOrder, int startInOrder, int endInOrder) {
+
+        if (startPre > endPre || startInOrder > endInOrder) {
+            return null;
+        }
+
+        int rootValue = preOrder[startPre];
+        TreeNode root = new TreeNode(rootValue);
+        for (int i = 0; i < endInOrder; i++) {
+            if (intOrder[i] == rootValue) {
+                root.left = construct(preOrder, startPre + 1, startPre+i-startInOrder, intOrder, startInOrder, i - 1);
+                root.right = construct(preOrder, startPre + i-startInOrder+1, endPre, intOrder, i+1, endInOrder);
+            }
+        }
+        return root;
 ```
 
 
