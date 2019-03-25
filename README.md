@@ -327,7 +327,67 @@ public class MergeTwoSortedArray {
 
 ```
 
+# 面试题6
 
+题目：输入一个链表的头节点，从尾到头反过来打印出每个节点的值。
+
+链表定义如下
+
+```java
+public class ListNode {
+    public int val;
+    public ListNode next = null;
+
+    public ListNode(int val) {
+        this.val = val;
+    }
+}
+```
+
+## 使用栈
+
+```java
+public static ArrayList<Integer> printListFromTailToHead(ListNode listNode) {
+        if (listNode == null) {
+            return null;
+        }
+        LinkedList<Integer> stack = new LinkedList<>();
+        for (ListNode node = listNode; node != null; node = node.next) {
+            stack.push(node.val);
+        }
+        return new ArrayList<>(stack);
+    }
+```
+
+## 递归
+
+```java
+public  ArrayList<Integer> printListFromTailToHead2(ListNode listNode) {
+        if (listNode == null) {
+            return null;
+        }
+        printListFromTailToHead2(listNode.next);
+
+        arrayList.add(listNode.val);
+        return arrayList;
+
+    }
+```
+
+## 测试用例
+
+* 功能测试（输入的链表有多个节点；输入的链表只有一个节点）
+* 特殊输入测试（输入的链表头节点指针为nullptr）
+
+# 面试题7
+
+## 重建二叉树
+
+题目：输入某二叉树的前序遍历和中序遍历的结果，请重建该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。例如，输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4，7，2，1，5，3，8，6}，则重建二叉树并输入它的头节点，二叉树和定义如下：
+
+```
+
+```
 
 
 

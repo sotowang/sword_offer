@@ -1,4 +1,5 @@
-import sun.reflect.generics.tree.Tree;
+import edu.xjtu.soto.ListNode;
+import edu.xjtu.soto.TreeNode;
 
 import java.util.*;
 
@@ -41,24 +42,24 @@ public class Solution {
 //        int[][] matrix = {{4, 5,6}, {7, 8,9}};
 //        System.out.println(matrix[0].length);
 
-//        ListNode head1 = new ListNode(-1);
-//        ListNode head2 = new ListNode(-1);
+//        edu.xjtu.soto.ListNode head1 = new edu.xjtu.soto.ListNode(-1);
+//        edu.xjtu.soto.ListNode head2 = new edu.xjtu.soto.ListNode(-1);
 ////
 //        for (int i = 6; i > 0; ) {
-//            ListNode p = new ListNode(i);
+//            edu.xjtu.soto.ListNode p = new edu.xjtu.soto.ListNode(i);
 //            p.next = head1.next;
 //            head1.next = p;
 //            i -= 2;
 //        }
 //        for (int i = 6; i > 1; ) {
-//            ListNode p = new ListNode(i);
+//            edu.xjtu.soto.ListNode p = new edu.xjtu.soto.ListNode(i);
 //            p.next = head1.next;
 //            head2.next = p;
 //            i -= 2;
 //        }
 //
 //
-//        ListNode result = Merge(head1.next, head2.next);
+//        edu.xjtu.soto.ListNode result = Merge(head1.next, head2.next);
 //        while (result != null) {
 //            System.out.println(result.val);
 //            result = result.next;
@@ -143,7 +144,7 @@ public class Solution {
 
 //        int[] pre = {1, 2, 4, 7, 3, 5, 6, 8};
 //        int[] in = {4, 7, 2, 1, 5, 3, 8, 6};
-//        TreeNode root = reConstructBinaryTree(pre, in);
+//        edu.xjtu.soto.TreeNode root = reConstructBinaryTree(pre, in);
 //
 //        printTree(root);
 
@@ -159,10 +160,10 @@ public class Solution {
         /**
          * 输入一个链表，按链表值从尾到头的顺序返回一个ArrayList。
          */
-//        ListNode head = new ListNode(-1);
+//        edu.xjtu.soto.ListNode head = new edu.xjtu.soto.ListNode(-1);
 //
 //        for (int i = 0; i < 10; i++) {
-//            ListNode p = new ListNode(i);
+//            edu.xjtu.soto.ListNode p = new edu.xjtu.soto.ListNode(i);
 //            p.next = head.next;
 //            head.next = p;
 //
