@@ -36,7 +36,7 @@ public class Find2 {
         int[][] arrays = {{1, 2, 8, 9}, {2, 4, 9, 12}, {4, 7, 10, 13}, {6, 8, 11, 15}};
         Find2 find2 = new Find2();
 
-        System.out.println(find2.find2(arrays, -1));
+        System.out.println(find2.find2(null, 1));
 
     }
 

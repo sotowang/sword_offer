@@ -22,7 +22,4 @@ public class LazySingleton {
         }
         return instance;
     }
-
-
-
 }
