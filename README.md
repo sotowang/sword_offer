@@ -429,5 +429,67 @@ public class TreeNode {
         return root;
 ```
 
+# 面试题8
 
+题目：给定一棵二叉树和其中一个节点，如何找出中序遍历序列的下一节点？树中的节点除了有两个分别指向左，右节点的指针，还有一个指向父节点的指针。
+
+```java
+public class TreeLinkNode {
+    public int val;
+    public TreeLinkNode left = null;
+    public TreeLinkNode right = null;
+    public TreeLinkNode next = null;
+
+    public TreeLinkNode(int val) {
+        this.val = val;
+    }
+}
+```
+
+
+
+要找出中序遍历的下一个结点，要分几种情况探讨。
+
+- 如果当前结点的右子结点不为空，那么下一个结点就是以该右子结点为根的子树的最左子结点；
+- 如果当前结点的右子结点为空，看它的父结点。此时分两种情况，如果父结点的右子结点就是当前结点，说明这个结点在中序遍历中已经被访问过了，需要继续往上看其父结点...直到父结点的左子结点是当前结点为止，该父结点就是下一个结点。如果在一直往上的过程中已经到达根结点，而根结点的父结点为null，这种情况说明当前结点已经是中序序列的最后一个结点了，不存在下一个结点，应该返回null.
+
+```java
+public static TreeLinkNode getNextNode(TreeLinkNode target) {
+        if (target == null) {
+            return null;
+        }
+
+        if (target.right != null) {
+            target = target.right;
+            while (target.left != null) {
+                target = target.left;
+            }
+            return target;
+        }
+        if (target.right == null) {
+            if (target == target.next.left) {
+                return target.next;
+            } else {
+                target = target.next;
+                while (target.next != null && target != target.next.left ) {
+                    target = target.next;
+                }
+                if (target.next == null) {
+                    return null;
+                } else {
+                    return target.next;
+                }
+            }
+        }
+        return null;
+    }
+```
+
+
+
+## 测试用例
+
+* 普通二叉树（完全二叉树，不完全二叉树）
+* 特殊二叉树（所有节点都没有右子节点的二叉树；所有节点都没有左子节点的二叉树；只有一个节点的二叉树；二叉树的根节点指针为null）
+* 不同位置的节点的下一个节点（下一个节点为当前节点的右子节点，右子树的最左子节点，父节点，跨层的父节点等；当前节点没有下一个节点）
 

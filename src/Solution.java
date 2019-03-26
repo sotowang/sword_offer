@@ -1,4 +1,5 @@
 import edu.xjtu.soto.ListNode;
+import edu.xjtu.soto.TreeLinkNode;
 import edu.xjtu.soto.TreeNode;
 
 import java.util.*;
