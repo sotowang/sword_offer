@@ -590,7 +590,94 @@ public class TwoQueueImpStack {
 }
 ```
 
+# 面试题10
 
+题目一：求斐波那契数列的第n项
+
+写一个函数，输入n，求斐波那契（Fibonacci）数列的第n项。斐波那契数列的定义如下：
+$$
+f(n) =
+\begin{cases}
+0  & \text{n=0} \\
+1 & \text{n=1} \\
+f(n-1)+f(n-2)  &\text{n>1}
+\end{cases}
+$$
+
+## 非递归
+
+```java
+public static long fibonacci(int n) {
+        if (n < 0) {
+            throw  new RuntimeException("非法数字");
+        }
+        int[] result = {0, 1};
+        if (n < 2) {
+            return result[n];
+        }
+
+        long MinOne = 1;
+        long MinTwo = 0;
+        long fibN = 0;
+        for (int i = 2; i <= n; i++) {
+            fibN = MinOne + MinTwo;
+            MinTwo = MinOne;
+            MinOne = fibN;
+        }
+        return fibN;
+
+    }
+```
+
+## 递归
+
+```java
+public static long finbonacci2(int n) {
+        if (n == 1 || n == 0) {
+            return n;
+        }
+
+        return finbonacci2(n - 1) + finbonacci2(n - 2);
+    }
+```
+
+## 青蛙跳台阶问题
+
+题目2: 一只青蛙一次可以跳上1级台阶，也可以跳上2级台阶，求该青蛙跳上一个n级台阶总共有多少种跳法。
+
+
+
+到达1级台阶只有1种可能，到达2级台阶有2种可能；可记为f(1) = 1,f(2) = 2。要到达3级台阶，可以选择在1级台阶处起跳，也可以选择在2级台阶处起跳，所以只需求到达1级台阶的可能情况 + 到达2级台阶的可能情况，即f(3) = f(2) +f(1)
+
+同理到达n级台阶，可以在n-1级台阶起跳，也可在n-2级台阶起跳，f(n) = f(n-2)+f(n-1)
+
+可以看做是斐波那契数列。
+
+```java
+public static long fabonacci(long n) {
+        if (n == 1 || n == 2) {
+            return n;
+        }
+        if (n < 1) {
+            throw new RuntimeException("非法值");
+        }
+        long a = 1;
+        long b = 2;
+        long f = 0;
+        for (int i = 3; i <= n; i++) {
+            f = a + b;
+            a = b;
+            b = f;
+        }
+        return f;
+    }
+```
+
+### 测试用例
+
+* 功能测试（输入3，5，10）
+* 边界值测试（如输入0，1，2）
+* 性能测试（输入较大的数字，如40，50，100等）
 
 
 
