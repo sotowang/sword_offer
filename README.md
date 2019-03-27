@@ -679,6 +679,140 @@ public static long fabonacci(long n) {
 * 边界值测试（如输入0，1，2）
 * 性能测试（输入较大的数字，如40，50，100等）
 
+# 面试题11
+
+## 快速排序
+
+```java
+public static void quickSort(int[] array,int low,int high) {
+
+        int i = low;
+        int j = high;
+
+        if (low < high) {
+            int piv = array[low];
+            while (low < high) {
+                while (low<high && array[high] >= piv) {
+                    high--;
+                }
+                if (low < high) {
+                    array[low] = array[high];
+                    low++;
+                }
+                while (low < high && array[low] < piv) {
+                    low++;
+                }
+                if (low < high) {
+                    array[high] = array[low];
+                    high--;
+                }
+            }
+            array[low] = piv;
+            quickSort(array, i, low - 1);
+            quickSort(array, low + 1, j);
+        }
+
+    }
+```
+
+## 对年龄排序O(n)
+
+题目：请实现一个排序算法，要求时间效率为O（n）
+
+> 对公司所有员工的年龄排序，公司员工人数几万，可以使用辅助空间
+
+```java
+public static void ageSort(int[] ages) {
+
+        if (ages == null) {
+            return;
+        }
+        int[] temp = new int[100];
+        for (int i = 0; i < ages.length; i++) {
+            temp[ages[i]]++;
+        }
+        int index = 0;
+        for (int i = 0; i < 100; i++) {
+            for (int j = 0; j < temp[i]; j++) {
+                ages[index++] = i;
+            }
+        }
+
+
+    }
+```
+
+公司员工的年龄有一个范围，在上面的代码中，允许的范围是0-99岁。数组temp胜来统计每个年龄出现的次数，某个年龄出现了多少次，就在数组ages里设置几次该年龄，这就相当于组数组ages排序了。该方法用长度100的整数数组作为辅助空间换来了O（n）的时间效率。
+
+## 旋转数组的最小数字
+
+题目：把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。输入一个递增排序的数组的一个旋转。输出旋转数组的最小元素。例如，数组{3,4,5,1,2}为{1，2，3，4，5}的一个旋转，该数组的最小值为1
+
+```java
+public class SpanArrayMin {
+    public static int spanArrayMin(int[] array) {
+        if (array == null || array.length == 0) {
+            throw new RuntimeException("非法输入");
+        }
+        int low = 0;
+        int high = array.length - 1;
+        if (array[low] < array[high]) {
+            return array[low];
+        }
+        while (low + 1 != high) {
+            int mid = (low + high) / 2;
+            if (array[mid] == array[low] && array[mid] == array[high]) {
+                return inorder(array, low, high);
+            }
+            if (array[mid] >= array[low]) {
+                low = mid;
+            }
+            if (array[mid] <= array[high]) {
+                high = mid;
+            }
+        }
+        return array[high];
+
+    }
+
+    private static int inorder(int[] array, int low, int high) {
+        int res = array[low];
+        for (int i = low; i < high; i++) {
+            if (array[i] < res) {
+                res = array[i];
+            }
+        }
+        return res;
+    }
+
+
+    public static void main(String[] args) {
+        int[] array1 = {3, 4, 5, 0, 2, 3};
+        int[] array2 = {1, 2, 3, 4, 5, 6};
+        int[] array3 = {1, 0, 1, 1, 1};
+        int[] array4 = {1, 1, 1, 0, 1};
+        int[] array5 = {1, 1, 1, 1, 1};
+
+        System.out.println(spanArrayMin(array1));
+        System.out.println(spanArrayMin(array2));
+        System.out.println(spanArrayMin(array3));
+        System.out.println(spanArrayMin(array4));
+        System.out.println(spanArrayMin(array5));
+
+
+    }
+}
+
+```
+
+### 测试用例
+
+* 功能测试（输入的数组是升序排序数组的一个旋转，数组中有重复数字或者没有重复数字）
+* 边界值测试（输入的数组是一个升序排序的数组，只包含一个数字的数组）
+* 特殊输入测试（输入null指针）
+
+
+
 
 
 
