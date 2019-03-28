@@ -1007,5 +1007,73 @@ public class MovingCount {
 * 边界值测试（方格只有一行或者一列;k等于0）
 * 特殊输入测试（k 为负数）
 
+# 面试题14
 
+## 剪绳子
+
+题目：给你一根长度为n的绳子，请把绳子剪成m段（m，n都是整数，n>1并且m>1），每段绳子的长度记为k[0],k[1]....,k[m]。请问k[0]xk[1]x...xk[m]可能的最大乘积是多少？例如，当绳子的长度是8时，我信把它剪成长度分别为2，3，3的三段，此时得到的最在乘积是18.
+
+
+
+
+
+# 发糖果
+
+有N个孩子站成一排，每个孩子有一个分值。给这些孩子派发糖果，需要满足如下需求：
+
+1、每个孩子至少分到一个糖果
+
+2、分值更高的孩子比他相邻位的孩子获得更多的糖果
+
+求至少需要分发多少糖果？
+
+## 贪心算法
+
+思路：
+
+1. 从左到右处理递增序列，分数更高的孩子获得更多的糖果
+2. 从右到左处理递增序列（即从左到右的递减序列），分数更高的孩子获得更多的糖果，两个递增序列重复的部分，取最大值（因左右两侧都需满足）
+
+```java
+public class Candy {
+    public static int candy(int[] scores, int[] candys) {
+        if (scores == null || scores.length < 1 || candys.length < scores.length) {
+            return 0;
+        }
+        if (scores.length == 1) {
+            candys[0] = 1;
+        }
+        Arrays.fill(candys, 1);
+        for (int i = 0; i < scores.length-1; i++) {
+            if (scores[i] < scores[i + 1]) {
+                candys[i+1]++;
+            }
+        }
+        for (int i = scores.length - 1; i > 0; i--) {
+            if (scores[i] < scores[i - 1] && candys[i] >= candys[i - 1]) {
+                candys[i - 1] = candys[i] + 1;
+            }
+        }
+        int sum = 0;
+        for (int i = 0; i < candys.length; i++) {
+            sum += candys[i];
+        }
+        return sum;
+    }
+
+
+    public static void main(String[] args) {
+        int[] scores1 = {1,2,2};
+        int[] scores2 = {1,0,2};
+        int[] candys = new int[scores1.length];
+
+        int sum1 = candy(scores1, candys);
+//        int sum2 = candy(scores2, candys);
+
+        System.out.println(Arrays.toString(candys));
+        System.out.println(sum1);
+    }
+}
+
+```
 
