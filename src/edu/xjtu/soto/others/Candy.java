@@ -1,7 +1,15 @@
 package edu.xjtu.soto.others;
-
 import java.util.Arrays;
 
+/**
+ * 有N个孩子站成一排，每个孩子有一个分值。给这些孩子派发糖果，需要满足如下需求：
+ *
+ * 1、每个孩子至少分到一个糖果
+ *
+ * 2、分值更高的孩子比他相邻位的孩子获得更多的糖果
+ *
+ * 求至少需要分发多少糖果？
+ */
 public class Candy {
     public static int candy(int[] scores, int[] candys) {
         if (scores == null || scores.length < 1 || candys.length < scores.length) {
