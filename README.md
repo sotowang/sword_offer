@@ -1023,6 +1023,247 @@ public class MovingCount {
 
 例如：输入字符串abc，则打印出由字符a、b、c所能排列出来的甩有字符串abc、acb、bac、bca、cab和cba
 
+```java
+public class Permutation {
+
+
+    public static ArrayList<String> permutation(String str) {
+        ArrayList<String> result = new ArrayList<>();
+        if (str == null || str.length() == 0) {
+            return result;
+        }
+        permutationCore(str.toCharArray(), 0, result);
+        Collections.sort(result);
+        return result;
+
+    }
+
+    private static void permutationCore(char[] chars,int begin, ArrayList<String> result) {
+        if (begin == chars.length - 1) {
+            String s = String.valueOf(chars);
+            if (!result.contains(s)) {
+                result.add(s);
+                return;
+            }
+        }
+        for (int i = begin; i < chars.length; i++) {
+            swap(chars, begin, i);
+            permutationCore(chars, begin + 1, result);
+            //交换后再交换回来
+            swap(chars, i, begin);
+        }
+
+    }
+
+    private static void swap(char[] chars, int i, int j) {
+        char temp = chars[i];
+        chars[i] = chars[j];
+        chars[j] = temp;
+    }
+
+    public static void main(String[] args) {
+        ArrayList<String> result = permutation("abc");
+
+        for (String s : result
+        ) {
+            System.out.println(s);
+
+        }
+    }
+}
+
+```
+
+### 测试用例
+
+* 功能测试（输入的字符串中有一个或者多个字符）。	
+* 特殊输入测试（输入的字符串的内容为空或者null）
+
+## 字符串的组合
+
+如果要求字符的所有组合呢？比如abc，所有组合情况是`[a, b, c, ab, ac, bc, abc]`，包含选择1个、2个、3个字符进行组合的情况，即
+$$
+\sum{C_3^1 + C_3^2 + C_3^ 3}
+$$
+。这可以用一个for循环完成。所以关键是如何求得在n个字符里选取m个字符总共的情况数，即如何求C(n, m)
+
+n个字符里选m个字符，有两种情况：
+
+- 第一个字符在组合中，则需要从剩下的n-1个字符中再选m-1个字符；
+- 第一个字符不在组合中，则需要从剩下的n-1个字符中选择m个字符。
+
+上面表达的意思用数学公式表示就是
+$$
+C_n^m = C_{n-1}^{m-1} + C_{n-1}^m
+$$
+
+
+全排列的过程：
+
+- 选择第一个字符
+- 获得第一个字符固定下来之后的所有的全排列
+  - 选择第二个字符
+  - 获得第一+ 二个字符固定下来之后的所有的全排列
+
+从这个过程可见，这是一个递归的过程。
+
+```java
+public class Permutation2 {
+    public static ArrayList<String> permutation2(String str) {
+        ArrayList<String> result = new ArrayList<>();
+        if (str == null || str.length() == 0) {
+            return result;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 1; i <= str.length(); i++) {
+            permutationCore(str, i,sb, result);
+        }
+
+        return result;
+    }
+
+    private static void permutationCore(String str, int num, StringBuilder sb ,ArrayList<String> list) {
+        if (num == 0) {
+            if (!list.contains(sb.toString())) {
+                list.add(sb.toString());
+                return;
+            }
+        }
+        if (str.length() == 0) {
+            return;
+        }
+        // 公式C(n, m) = C(n-1, m-1)+ C(n-1, m)
+        // 第一个字符是组合中的第一个字符，在剩下的n-1个字符中选m-1个字符
+        sb.append(str.charAt(0));  //选中第一个字符
+        permutationCore(str.substring(1), num - 1, sb, list);
+
+
+        // 第一个字符不是组合中的第一个字符，在剩下的n-1个字符中选m个字符
+        sb.deleteCharAt(sb.length() - 1);
+        permutationCore(str.substring(1), num, sb, list);
+
+
+    }
+
+    public static void main(String[] args) {
+        ArrayList list1 = permutation2("abc");
+        System.out.println(list1);
+        ArrayList list2 = permutation2("abcca");
+        System.out.println(list2);
+    }
+}
+
+```
+
+## 正方体的八个顶点
+
+题目：输入一个含有8个数字的数组，判断有没有可能把这8个数字分别放到正方体的8个顶点上，使得正方体上三组相对的面上的4个顶点的和都相等。
+
+> 这相当于先得到a1、a2、a3、a4、a5、a6、a7和a8这8数字的所有排列，然后判断有没有某一个排列符合题目给定的条件，即a1+a2+a3+a4 = a5+a6+a7+a8,a1+a3+a5+a7 = a2+a4+a6+a8.并且 a1+ a2+a5+a6=a3+a4+a7+a8
+
+```java
+public class Permutation3 {
+    public static ArrayList<int[]> possibilitiesOfCube(int[] array) {
+        ArrayList<int[]> list = new ArrayList<>();
+        if (array == null || array.length != 8) {
+            return list;
+        }
+        ArrayList<int[]> result = new ArrayList<>();
+
+        permutation(array, 0, list);
+        if (list.size() > 0) {
+            for (int[] a : list) {
+                if (check(a)) {
+                    result.add(a);
+                }
+            }
+
+        }
+        return result;
+    }
+
+    private static void permutation(int[] array, int begin, ArrayList<int[]> result) {
+        if (begin == array.length - 1) {
+            if (!has(result, array)) {
+                result.add(Arrays.copyOf(array, array.length));
+                return;
+            }
+        }
+
+        for (int i = begin; i < array.length; i++) {
+            swap(array, i, begin);
+            permutation(array, begin + 1, result);
+            swap(array, i, begin);
+        }
+    }
+
+    private static void swap(int[] array, int i, int j) {
+        int temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+
+    /**
+     * list中的数组是包含array
+     *
+     * @param list
+     * @param array
+     * @return
+     */
+    private static boolean has(ArrayList<int[]> list, int[] array) {
+        for (int i = 0; i < list.size(); i++) {
+            if (equal(list.get(i), array)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * array1是否与array2值相等
+     *
+     * @param array1
+     * @param array2
+     * @return
+     */
+    private static boolean equal(int[] array1, int[] array2) {
+        for (int i = 0; i < array1.length; i++) {
+            if (array1[i] != array2[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 判断各边和是满足要求
+     *
+     * @param array
+     * @return
+     */
+    private static boolean check(int[] array) {
+
+        if (array[0] + array[1] + array[2] + array[3] == array[4] + array[5] + array[6] + array[7]
+                && array[0] + array[2] + array[4] + array[6] == array[1] + array[3] + array[5] + array[7]
+                && array[0] + array[1] + array[4] + array[5] == array[2] + array[3] + array[6] + array[7]) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static void main(String[] args) {
+        int[] a = {1, 1, 2, 2, 3, 3, 4, 4};
+        int[] A = {1,2,3,1,2,3,2,2};
+        int[] B = {1,2,3,1,8,3,2,2};
+        List<int[]> list = possibilitiesOfCube(B);
+        System.out.println("有" + list.size() + "种可能");
+        for (int[] arr : list) {
+            System.out.println(Arrays.toString(arr));
+        }
+    }
+}
+```
 
 
 
@@ -1031,7 +1272,12 @@ public class MovingCount {
 
 
 
-# 发糖果
+
+
+
+---
+
+# --发糖果
 
 有N个孩子站成一排，每个孩子有一个分值。给这些孩子派发糖果，需要满足如下需求：
 

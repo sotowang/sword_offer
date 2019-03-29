@@ -172,7 +172,7 @@ public class Solution {
 //        ArrayList<Integer> arrayList = new ArrayList<>(printListFromTailToHead(head.next));
 //
 //        System.out.println(arrayList);
-//        Permutation("1223");
+//        Permutation1("1223");
 //        int[] a = {2,2,2,2,2,1,3,4,5};
 //        System.out.println(MoreThanHalfNum_Solution(a));
 

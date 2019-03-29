@@ -8,7 +8,7 @@ import java.util.Collections;
  * <p>
  * 例如：输入字符串abc，则打印出由字符a、b、c所能排列出来的甩有字符串abc、acb、bac、bca、cab和cba
  */
-public class Permutation {
+public class Permutation1 {
 
 
     public static ArrayList<String> permutation(String str) {
