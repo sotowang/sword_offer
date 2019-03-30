@@ -1214,9 +1214,78 @@ public static int changeM2N(int m, int n) {
     }
 ```
 
+# 面试题16：数值的整数次方
+
+题目：实现了函数double Power(double base,int exponent)，求base的exponent次方。不得使用库函数，同时不需要考虑大数问题。
 
 
 
+## 连乘
+
+```java
+ public static double power(double base, int exponent) {
+        if (base == 0) {
+            return 0;
+        }
+        double result = 1.0;
+        int positiveExponent = Math.abs(exponent);
+        for (int i = 0; i < positiveExponent; i++) {
+            result = result * base;
+        }
+        return exponent < 0 ? 1 / result : result;
+    }
+```
+
+## 快速幂
+
+我们要求
+$$
+a^n
+$$
+，分n为奇数和偶数两种情况，如下
+
+
+$$
+a^n = a ^{n /2}  \times  a ^{n /2} 
+$$
+ ，n为偶数
+
+
+$$
+a^n = a ^{(n-1) /2}  \times  a ^{(n-1) /2} \times a
+$$
+，n为奇数
+
+假如要求
+$$
+2^{32}
+$$
+，按照上面连乘的思路，需要进行31次乘法；采用上面的公式，只需要5次：先求平方，然后求四次方、八次方、十六次方，最后三十二次方。将时间复杂度降到了O(lg n)。
+
+```java
+public static double power2(double base, int exponent) {
+        if (base == 0) {
+            return 0;
+        }
+        double result = 1.0;
+        int positiveExponent = Math.abs(exponent);
+
+        while (positiveExponent != 1) {
+
+            //判断是否为奇数
+            if ((positiveExponent & 1) == 1) {
+                result = result * base;
+            }
+            base = base * base;
+
+            //positiveExponent 除以2
+            positiveExponent = positiveExponent >> 1;
+        }
+
+        return exponent < 0 ? 1 / (result * base) : result * base;
+
+    }
+```
 
 
 
