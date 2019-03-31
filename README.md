@@ -1309,7 +1309,19 @@ public static double power2(double base, int exponent) {
 从第一步得知，需要经常改变字符串，我们知道**Java中字符串是不可变对象，意味着每次对String的改变都会产生一个新的字符串对象**，这将浪费大量空间，所以在下面的程序中将使用`StringBuilder`。根据这些描述，可写出如下代码。
 
 ```java
- public static void printToMaxOfNDigits(int n) {
+package edu.xjtu.soto.chap17;
+
+/**
+ * 从1至m位 所有的数
+ */
+
+public class PrintToMaxOfNDigits {
+
+    /**
+     * 使用字符串模拟数字加法
+     * @param n
+     */
+    public static void printToMaxOfNDigits1(int n) {
         if (n <= 0) {
             return;
         }
@@ -1359,7 +1371,7 @@ public static double power2(double base, int exponent) {
     }
 
     private static void print(StringBuilder sb) {
-        int start = 0;
+        int start = sb.length();
         for (int i = 0; i < sb.length(); i++) {
             if (sb.charAt(i) != '0') {
                 start = i;
@@ -1377,15 +1389,68 @@ public static double power2(double base, int exponent) {
         StringBuilder sb = new StringBuilder("010");
 //        print(sb);
 
-        printToMaxOfNDigits(1);
+        printToMaxOfNDigits1(1);
 
     }
+}
 
 ```
 
 `stillIncrease`方法会对当前数进行加1操作，该方法返回一个布尔值，用来表明当前数还能不能继续增长。比如n = 3时，当前数为999已经是最大了，不能再增长，此时如果调用该方法就应该返回false，因此跳出循环，不会打印1000（虽然不打印，但实际在该方法中字符串已经从"999"被更新到了“1000”）。当当前数可以继续增长时，会先对个位上的数进行自增操作，如果此时得到的sum < 10，说明不需向前进位，直接退出并返回；如果sum == 10，说明需要向前进位，需要将当前位设置为0，然后进位设置为1，在下一循环中，需要加到在前一位上，继续判断这一位上需不需要进位......直到某位上sum  < 10循环才终止。
 
 `print`方法，为了符合人的阅读习惯，比如"002"其实就是数字2，应保证**从左到右第一个不为0的数前面的0不会被打印出来。**
+
+```java
+public class printFrom1ToMaxOfNDigitRecur {
+    public static void printFrom1ToMaxOfNDigitRecur(int n) {
+        if (n <= 0) {
+            return;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < n; i++) {
+            sb.append("0");
+        }
+
+        printRecur(sb, n, -1);
+
+
+    }
+
+    private static void printRecur(StringBuilder sb, int len, int index) {
+        if (index == len - 1) {
+            print(sb);
+            return;
+        }
+        for (int i = 0; i < 10; i++) {
+            sb.setCharAt(index+1, (char) (i + '0'));
+            printRecur(sb,len,index+1);
+        }
+
+
+    }
+
+    private static void print(StringBuilder sb) {
+        int start = sb.length();
+        for (int i = 0; i < sb.length(); i++) {
+            if (sb.charAt(i) != '0') {
+                start = i;
+                break;
+
+            }
+        }
+        if (start < sb.length()) {
+            System.out.println(sb.substring(start));
+        }
+
+    }
+
+    public static void main(String[] args) {
+        printFrom1ToMaxOfNDigitRecur(2);
+    }
+
+}
+
+```
 
 
 

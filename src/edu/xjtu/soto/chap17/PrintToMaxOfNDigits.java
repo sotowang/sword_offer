@@ -1,8 +1,16 @@
 package edu.xjtu.soto.chap17;
 
+/**
+ * 从1至m位 所有的数
+ */
+
 public class PrintToMaxOfNDigits {
 
-    public static void printToMaxOfNDigits(int n) {
+    /**
+     * 使用字符串模拟数字加法
+     * @param n
+     */
+    public static void printToMaxOfNDigits1(int n) {
         if (n <= 0) {
             return;
         }
@@ -52,7 +60,7 @@ public class PrintToMaxOfNDigits {
     }
 
     private static void print(StringBuilder sb) {
-        int start = 0;
+        int start = sb.length();
         for (int i = 0; i < sb.length(); i++) {
             if (sb.charAt(i) != '0') {
                 start = i;
@@ -70,7 +78,7 @@ public class PrintToMaxOfNDigits {
         StringBuilder sb = new StringBuilder("010");
 //        print(sb);
 
-        printToMaxOfNDigits(1);
+        printToMaxOfNDigits1(1);
 
     }
 
