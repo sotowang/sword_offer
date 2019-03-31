@@ -1214,13 +1214,15 @@ public static int changeM2N(int m, int n) {
     }
 ```
 
-# 面试题16：数值的整数次方
+# 面试题16
+
+## 数值的整数次方
 
 题目：实现了函数double Power(double base,int exponent)，求base的exponent次方。不得使用库函数，同时不需要考虑大数问题。
 
 
 
-## 连乘
+### 连乘
 
 ```java
  public static double power(double base, int exponent) {
@@ -1236,7 +1238,7 @@ public static int changeM2N(int m, int n) {
     }
 ```
 
-## 快速幂
+### 快速幂
 
 我们要求
 $$
@@ -1286,6 +1288,112 @@ public static double power2(double base, int exponent) {
 
     }
 ```
+
+# 面试题17
+
+## 打印从1到最大的n位数
+
+题目：输入数字n，按顺序打印出从1到最大的n位十进制数。比如输入3，则打印出1，2，3一直到最大的3位数999
+
+> 这道题有陷阱，可能容易想到输入4就打印1~9999，输入5就打印1~99999...那我要是输入100呢？int型不能表示出来吧，甚至更大的值，即便是long型也不能表示出来。
+
+这是一道**大数问题**，牵涉到大数问题我们可以将其转化为字符串表示。因为字符串任意长度都行。
+
+### 在字符串上模拟数字的加法
+
+本题要求按照递增顺序打印出1~最大的n位十进制数，所以字符串的长度定也应该是n。首先将长度为n的字符串中每个字符初始化为0，比如n = 3时，字符串一开始为`000`。我们要做的只有两步：
+
+- 模拟数字那样在字符串上做加法；
+- 将字符串表达的数字打印出来，为了可读性需要忽略不必要的0；
+
+从第一步得知，需要经常改变字符串，我们知道**Java中字符串是不可变对象，意味着每次对String的改变都会产生一个新的字符串对象**，这将浪费大量空间，所以在下面的程序中将使用`StringBuilder`。根据这些描述，可写出如下代码。
+
+```java
+ public static void printToMaxOfNDigits(int n) {
+        if (n <= 0) {
+            return;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < n; i++) {
+            sb.append(0);
+        }
+
+        while (stillIncrease(sb)) {
+            print(sb);
+        }
+    }
+
+    /**
+     * 判断sb是否还能增加1
+     * @param sb
+     * @return
+     */
+    private static boolean stillIncrease(StringBuilder sb) {
+        int len = sb.length();
+        int token = 0;
+        for (int i = len - 1; i >= 0; i--) {
+            int sum = sb.charAt(i) - '0' + token;
+            if (i == len - 1) {
+                sum++;
+            }
+            if (sum == 10) {
+
+                if (i == 0) {
+                    return false;
+                } else {
+                    //进位
+                    sb.setCharAt(i, '0');
+                    token = 1;
+
+                }
+            } else {
+                //没有进位
+                sb.setCharAt(i, (char) (sum + '0'));
+
+                //自增完退出
+                return true;
+            }
+
+        }
+        return false;
+    }
+
+    private static void print(StringBuilder sb) {
+        int start = 0;
+        for (int i = 0; i < sb.length(); i++) {
+            if (sb.charAt(i) != '0') {
+                start = i;
+                break;
+
+            }
+        }
+        if (start < sb.length()) {
+            System.out.println(sb.substring(start));
+        }
+
+    }
+
+    public static void main(String[] args) {
+        StringBuilder sb = new StringBuilder("010");
+//        print(sb);
+
+        printToMaxOfNDigits(1);
+
+    }
+
+```
+
+`stillIncrease`方法会对当前数进行加1操作，该方法返回一个布尔值，用来表明当前数还能不能继续增长。比如n = 3时，当前数为999已经是最大了，不能再增长，此时如果调用该方法就应该返回false，因此跳出循环，不会打印1000（虽然不打印，但实际在该方法中字符串已经从"999"被更新到了“1000”）。当当前数可以继续增长时，会先对个位上的数进行自增操作，如果此时得到的sum < 10，说明不需向前进位，直接退出并返回；如果sum == 10，说明需要向前进位，需要将当前位设置为0，然后进位设置为1，在下一循环中，需要加到在前一位上，继续判断这一位上需不需要进位......直到某位上sum  < 10循环才终止。
+
+`print`方法，为了符合人的阅读习惯，比如"002"其实就是数字2，应保证**从左到右第一个不为0的数前面的0不会被打印出来。**
+
+
+
+
+
+
+
+
 
 
 
