@@ -1400,6 +1400,8 @@ public class PrintToMaxOfNDigits {
 
 `print`方法，为了符合人的阅读习惯，比如"002"其实就是数字2，应保证**从左到右第一个不为0的数前面的0不会被打印出来。**
 
+### 递归求解
+
 ```java
 public class printFrom1ToMaxOfNDigitRecur {
     public static void printFrom1ToMaxOfNDigitRecur(int n) {
@@ -1452,7 +1454,125 @@ public class printFrom1ToMaxOfNDigitRecur {
 
 ```
 
+# 面试题18
 
+## 删除指定链表节点
+
+题目：在O（1）时间内删除链表节点
+
+给定单向链表的头指针和一个节点指针，定义一个函数在O（1）时间内删除该节点，链表节点与函数的定义如下：
+
+```java
+public class ListNode {
+    public int val;
+    public ListNode next = null;
+
+    public ListNode(int val) {
+        this.val = val;
+    }
+}
+```
+
+```java
+public class DeleteNode {
+    public static void deleteNode(ListNode head, ListNode p) {
+        if (head == null || p == null) {
+            return;
+        }
+
+        //要删除的节点不是尾节点
+        if (p.next != null) {
+            ListNode pNext = p.next;
+            p.val = pNext.val;
+            p.next = pNext.next;
+            pNext = null;
+            //是尾节点也是头节点
+        } else if (head == p) {
+            head = head.next;
+            //仅是尾节点
+        } else {
+            ListNode first = head;
+            while (first.next != p) {
+                first = first.next;
+            }
+            first.next = null;
+        }
+    }
+
+}
+```
+
+## 删除链表中的重复结点
+
+题目：在一个排序的链表中，如何删除重复的节点？
+
+> 例如，链表1->2->3->3->4->4->5 处理后为 1->2->5
+
+注意重复的结点不保留：并不是将重复结点删除到只剩一个，而是重复结点的全部会被删除。所以链表1->2->3->3->4->4->5 处理后不是1->2->3->4->5。
+
+
+
+```java
+public class DeleteDuplication {
+    /**
+     * 重新添加头结点
+     * @param head
+     */
+    public static void deleteDuplicate(ListNode head) {
+        if (head == null || head.next == null) {
+            return;
+        }
+        ListNode first = new ListNode(head.val - 1);
+        first.next = head;
+        ListNode pre = first;
+        ListNode p = pre.next;
+        while (p != null && p.next != null) {
+            if (p.val != p.next.val) {
+                p = p.next;
+                pre = pre.next;
+            } else {
+                p = p.next;
+                while (p.val == p.next.val) {
+                    p = p.next;
+                }
+                p = p.next;
+                pre.next = p;
+            }
+
+        }
+
+        head = first.next;
+        first = null;
+    }
+
+    public static void main(String[] args) {
+        ListNode node11 = new ListNode(1);
+        ListNode node21 = new ListNode(2);
+        ListNode node31 = new ListNode(3);
+        ListNode node32 = new ListNode(3);
+        ListNode node33 = new ListNode(3);
+        ListNode node41 = new ListNode(4);
+        ListNode node42 = new ListNode(4);
+        ListNode node51 = new ListNode(5);
+        node11.next = node21;
+        node21.next = node31;
+        node31.next = node32;
+        node32.next = node33;
+        node33.next = node41;
+        node41.next = node42;
+        node42.next = node51;
+
+        deleteDuplicate(node11);
+
+        while (node11 != null) {
+            System.out.println(node11.val);
+            node11 = node11.next;
+        }
+    }
+
+
+}
+```
 
 
 
