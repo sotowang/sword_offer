@@ -1772,7 +1772,100 @@ public class FindKthToTail {
 * 功能测试（第k个节点在链表的中间；第k个节点是链表的头节点；第k个节曙中链表的尾节点）
 * 特殊输入测试（链表头节点为null指针；链表的节点总数少于k；k等于0）
 
+# 面试题23
 
+## 链表中环入口节点
+
+题目：如果一个链表中包含环，如何找出环的入口节点？
+
+### 双指针法
+
+```java
+public static ListNode meetingNode1(ListNode head) {
+        if (head == null || head.next == null || head.next.next == null) {
+            return null;
+        }
+
+        ListNode p = head.next;
+        ListNode q = head.next.next;
+        while (p != q && q != null) {
+            p = p.next;
+            q = q.next.next;
+        }
+        if (q == null) {
+            return null;
+        } else {
+            q = head;
+        }
+        while (p != q) {
+            p = p.next;
+            q = q.next;
+        }
+        return p;
+    }
+```
+
+1. p走一步，q走2步，直至二者相遇
+2. 将q重置为头结点
+3. p q 各走一步，直至相遇，该点即为环
+
+## 利用Set中元素的唯一性
+
+我们知道Set中不能存放相同的元素。当在遍历链表的过程中，不断将当前结点放入Set中，当**第一次add失败**时，说明这个结点之前已经访问过了，这个结点刚好就是环的入口结点。
+
+```java
+ /**
+     * 利用set的无序性
+     * @param head
+     * @return
+     */
+    public static ListNode meetingNode2(ListNode head) {
+        if (head == null || head.next == null || head.next.next == null) {
+            return null;
+        }
+        ListNode p = head;
+        Set<ListNode> set = new HashSet<>();
+        while (set.add(p)) {
+            p = p.next;
+        }
+        return p;
+
+    }
+
+public static void main(String[] args) {
+        ListNode l1 = new ListNode(1);
+        ListNode l2 = new ListNode(2);
+        ListNode l3 = new ListNode(3);
+        ListNode l4 = new ListNode(4);
+        ListNode l5 = new ListNode(5);
+        ListNode l6 = new ListNode(6);
+        l1.next = l2;
+        l2.next = l3;
+        l3.next = l4;
+        l4.next = l5;
+        l5.next = l6;
+        l6.next = l3;
+
+        ListNode result = meetingNode1(l2);
+        System.out.println(result == null ? -1 : result.val);
+
+
+        ListNode res = meetingNode2(l1);
+        System.out.println(res == null ? -1 : res.val);
+
+    }
+```
+
+
+
+
+
+
+
+## 测试用例
+
+* 功能测试（链表中包含或者不包含环；链表中有多个或者只有一个节点）
+* 特殊输入测试（链表头节点为null）
 
 
 
