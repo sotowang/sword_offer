@@ -1708,6 +1708,70 @@ public static void recorderOddEven(int[] array) {
     }
 ```
 
+# 面试题22
+
+## 链表中倒数第k个节点
+
+题目：输入一个链表，输出该链表中倒数第k个节点。为了符合大多数人的习惯，本题从1开始计数，即链表的尾节点是倒数第1个节点。
+
+>  例如，一个链表有6个节点，从头节点开始，它们的值依次是1、2、3、4、5、6。这个链表的倒数第3个节点是值为4的节点。链表节点定义如下：
+
+```java
+
+public class ListNode {
+    public int val;
+    public ListNode next = null;
+
+    public ListNode(int val) {
+        this.val = val;
+    }
+}
+
+```
+
+```java
+public class FindKthToTail {
+    public static ListNode findKthToTail(ListNode head, int k) {
+        if (head == null || k == 0) {
+            return null;
+        }
+        ListNode p = head;
+        ListNode q = head;
+        for (int i = 0; i < k-1; i++) {
+            if (p.next != null) {
+                p = p.next;
+            } else {
+                return null;
+            }
+        }
+        while (p.next != null) {
+            q = q.next;
+            p = p.next;
+        }
+        return q;
+    }
+
+    public static void main(String[] args) {
+        ListNode head = new ListNode(1);
+        ListNode head2 = new ListNode(2);
+        ListNode head3 = new ListNode(3);
+        ListNode head4 = new ListNode(4);
+        ListNode head5 = new ListNode(5);
+        head.next = head2;
+        head2.next = head3;
+        head3.next = head4;
+        head4.next = head5;
+        System.out.println(findKthToTail(head, 6).val);
+    }
+}
+
+```
+
+## 测试用例
+
+* 功能测试（第k个节点在链表的中间；第k个节点是链表的头节点；第k个节曙中链表的尾节点）
+* 特殊输入测试（链表头节点为null指针；链表的节点总数少于k；k等于0）
+
 
 
 
