@@ -1957,6 +1957,51 @@ public class ListNode {
 }
 ```
 
+### 非递归版本
+
+```java
+public static ListNode merge(ListNode l1, ListNode l2) {
+        if (l1 == null) {
+            return l2;
+        }
+        if (l2 == null) {
+            return l1;
+        }
+        ListNode head= null;
+        ListNode p = l1;
+        ListNode q = l2;
+
+        if (l1.val <= l2.val) {
+            head = l1;
+            p = l1.next;
+        } else {
+            head = l2;
+            q = l2.next;
+        }
+
+        ListNode cur = head;
+        while (p != null || q != null) {
+            if (p == null) {
+                cur.next = q;
+                break;
+            } else if (q == null) {
+                cur.next = p;
+                break;
+            } else if (p.val < q.val) {
+                cur.next = p;
+                cur = cur.next;
+                p = p.next;
+            } else {
+                cur.next = q;
+                cur = cur.next;
+                q = q.next;
+            }
+        }
+        return head;
+
+    }
+```
+
 
 
 
