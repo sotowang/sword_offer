@@ -2093,9 +2093,135 @@ public class HasSubtree {
 
 ```
 
+## 测试用例
+
+* 功能测试（树A和树B都是普通的二叉树；树B是或者不是树A的子结构）
+* 特殊输入测试（两棵二叉树的一个或者两全根节点为null；二叉树的所有节点都没有左子树或者右子树）
 
 
 
+# 面试题27
+
+## 二叉树的镜像
+
+题目：请完成一个函数，输入一棵二叉树，该函数输出它的镜像。
+
+二叉树节点的定义如下：
+
+```java
+public class TreeNode {
+
+    public int val = 0;
+    public TreeNode left = null;
+    public TreeNode right = null;
+
+    public TreeNode(int val) {
+        this.val = val;
+
+    }
+}
+```
+
+
+
+### 递归(前序遍历)
+
+```java
+/**
+     * 递归求镜像（先序遍历）
+     * @param root
+     * @return
+     */
+    public static TreeNode treeMirror1(TreeNode root) {
+        if (root == null || (root.left == null && root.right == null)) {
+            return root;
+        }
+        TreeNode temp = root.left;
+        root.left = root.right;
+        root.right = temp;
+        if (root.left != null) {
+            treeMirror1(root.left);
+        }
+        if (root.right != null) {
+            treeMirror1(root.right);
+        }
+        return root;
+    }
+```
+
+### 层次遍历
+
+```java
+    /**
+     * 非递归，层次遍历
+     * @param root
+     */
+    public static void treeMirror2(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            TreeNode node = queue.poll();
+            if (node.left != null || node.right != null) {
+                TreeNode temp = node.left;
+                node.left = node.right;
+                node.right = temp;
+            }
+            if (node.left != null) {
+                queue.offer(node.left);
+            }
+            if (node.right != null) {
+                queue.offer(node.right);
+            }
+        }
+
+
+    }
+```
+
+### 非递归（前序遍历）
+
+```java
+/**
+     * 非递归前序遍历
+     * @param root
+     */
+    public static void treeMirror3(TreeNode root) {
+        LinkedList<TreeNode> stack = new LinkedList<>();
+
+        while (root != null || !stack.isEmpty()) {
+            while (root != null) {
+                stack.push(root);
+                if (root.left != null || root.right != null) {
+                    TreeNode temp = root.left;
+                    root.left = root.right;
+                    root.right = temp;
+                }
+                root = root.left;
+            }
+
+            if (!stack.isEmpty()) {
+                root = stack.pop();
+                root = root.right;
+            }
+        }
+
+    }
+
+```
+
+**前序遍历是深度优先搜索，所以用到了栈；而层序遍历是广度优先搜索，用到队列。**
+
+前序遍历是只要某结点还有左子结点，就不断压入栈中，直到没有左子结点时弹栈，接着将根结点指向右子树重复上述过程。
+
+层序遍历很简单，先将根结点入列，然后弹出根结点将根结点子结点入列，不断重复上述过程直到队列为空。
+
+## 测试用例
+
+* 功能测试（普通二叉树；对叉树的所有节点都没有左子树或者右子树；只有一个节点的二叉树）。
+* 特殊国俾测试（二叉树的根节点为null）
 
 
 

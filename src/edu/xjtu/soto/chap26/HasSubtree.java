@@ -50,7 +50,7 @@ public class HasSubtree {
         root2.left = root4;
         root2.right = root5;
 
-        boolean b = hasSubtree(root2, root5);
+        boolean b = hasSubtree(root1, root3);
 
         System.out.println(b);
     }
