@@ -2002,7 +2002,96 @@ public static ListNode merge(ListNode l1, ListNode l2) {
     }
 ```
 
+## 测试用例
 
+* 功能测试（输入的两个链表有多个节点；节点的值互不相同或者存在值相等的多个节点）。
+* 特殊输入测试（两个链表的一个或者两个头节点为null；两个链表中只有一个节点）。
+
+
+
+# 面试题26
+
+## 树的子结构
+
+题目：输入两棵二叉树A和B，判断B是不是A的子结构。二叉树节点的定义如下：
+
+```java
+public class TreeNode {
+
+    public int val = 0;
+    public TreeNode left = null;
+    public TreeNode right = null;
+
+    public TreeNode(int val) {
+        this.val = val;
+
+    }
+}
+```
+
+二叉树这种递归的数据结构。想到用递归的方法解决是很自然的。
+
+首先我们要在二树A中找到和树B根结点值一样的结点R，结点R可能有多个，因为树A中的结点值可能不止一个与树B的根结点值相同。对于每个结点R，其子树都有可能是树A的子结构，因此只要还未在树A中找到一个子结构，就要继续遍历树A判断其他R结点。
+
+对于某一个R结点，我们要求根结点R的左子结点、右子结点和树B根结点的左子结点、右子结点分别相等（值相等），而且R的子结点的左右子结点也要和B的子结点值相等......直到和树B的叶子结点也相等才说树A包含树B。这是个递归的过程。
+
+对于这两个步骤，可写出如下
+
+
+```java
+public class HasSubtree {
+    public static boolean hasSubtree(TreeNode root, TreeNode subRoor) {
+        boolean result = false;
+        if (root != null && subRoor != null) {
+            if (root.val == subRoor.val) {
+                result = doesTree1HasTree2(root, subRoor);
+            }
+            if (!result) {
+                result = hasSubtree(root.left, subRoor);
+            }
+            if (!result) {
+                result = hasSubtree(root.right, subRoor);
+            }
+        }
+        return result;
+
+    }
+
+    private static boolean doesTree1HasTree2(TreeNode t1, TreeNode t2) {
+        if (t2 == null) {
+            return true;
+        }
+        if (t1 == null) {
+            return false;
+        }
+        if (t1.val != t2.val) {
+            return false;
+        }
+        return doesTree1HasTree2(t1.left, t2.left)
+                && doesTree1HasTree2(t1.right, t2.right);
+
+    }
+
+    public static void main(String[] args) {
+        TreeNode root1 = new TreeNode(1);
+        TreeNode root2 = new TreeNode(2);
+        TreeNode root3 = new TreeNode(3);
+        TreeNode root4 = new TreeNode(4);
+        TreeNode root5 = new TreeNode(5);
+
+        root1.left = root2;
+        root1.right = root3;
+        root2.left = root4;
+        root2.right = root5;
+
+        boolean b = hasSubtree(root2, root5);
+
+        System.out.println(b);
+    }
+
+}
+
+```
 
 
 
