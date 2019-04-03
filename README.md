@@ -1858,14 +1858,124 @@ public static void main(String[] args) {
 
 
 
- 
-
-
-
 ## 测试用例
 
 * 功能测试（链表中包含或者不包含环；链表中有多个或者只有一个节点）
 * 特殊输入测试（链表头节点为null）
+
+# 面试题24
+
+## 反转链表
+
+题目:定义一个函数，输入一个链表的头节点，反转该链表并输出反转后链表的头节点。链表节点定义如下：
+
+```java
+public class ListNode {
+    public int val;
+    public ListNode next = null;
+
+    public ListNode(int val) {
+        this.val = val;
+    }
+}
+```
+
+### 使用头插法
+
+```java
+public static ListNode reverseList1(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode first = new ListNode(-1);
+        first.next = head;
+        ListNode p = head.next;
+        head.next = null;
+        ListNode q = p;
+        while (p != null) {
+            q = p.next;
+            p.next = first.next;
+            first.next = p;
+            p = q;
+        }
+        head = first.next;
+        first = null;
+        return head;
+
+    }
+```
+
+### 使用递归
+
+```java
+ /**
+     * 使用递归
+     * @param head
+     * @return
+     */
+    public static ListNode reverseList2(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        //递归后的头节点
+        ListNode headNode  = reverseList2(head.next);
+        head.next.next = head;
+        head.next = null;
+        return headNode;
+
+    }
+```
+
+只可意会，不可言传
+
+## 测试用例
+
+* 功能测试（输入的链表含有多个节点：链表中只有一个节点）。
+* 特殊输入测试（链表头节点为null）
+
+# 面试题25
+
+## 合并两个排序的链表
+
+题目：输入两个递增排序的链表，合并这两个链表并使新链表中的节点仍是递增排序的。
+
+> 例如，输入链表1：1--3--5--7      链表2:2--4--6--8       
+>
+> 合并之：  链表3 ：   1--2--3--4--5--6--7--8
+
+链表节点定义如下
+
+```java
+public class ListNode {
+    public int val;
+    public ListNode next = null;
+
+    public ListNode(int val) {
+        this.val = val;
+    }
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
