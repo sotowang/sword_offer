@@ -2547,9 +2547,91 @@ public class StackIncludeFuncMin {
 * 弹出栈的数字不是最小元素
 * 弹出栈的数字是最小元素
 
+# 面试题31
+
+## 栈的压入，弹出序列
+
+> ```
+> 题目：输入两个整数序列。第一个序列表示栈的压入顺序，请判断第二个序列是否为该栈的弹出顺序。假设压入栈的所有数字均不相等。
+> 例如，序列{1,2,3,4,5,}是某栈的压栈序列，序列{4,5,3,2,1}是该压栈序列对应的一个弹出序列，但{4，3，5，1，2}就不可能是该压栈序列的弹出序列。
+> ```
+
+题目只是给出了两个序列，并没有栈，所有我们需要自己定义**一个辅助栈**帮助我们模拟入栈出栈过程。
+
+需要用到一个指针表示在出栈序列中的当前出栈元素。每次入栈一个元素，之后立刻和出栈序列中当前出栈元素对比，若相同就弹出刚压入的元素、同时当前弹出元素指针前移。之后还要继续比较，如果栈顶还和当前弹出元素相同则需要接着弹出。否则压入入栈序列中的下一个元素。
+
+正常情况下，如果出栈顺序正确，当入栈序列中的元素都被压入后，辅助栈能按照出栈序列全部弹出。**如果当元素都被压入后，辅助栈没能弹出所有元素（不为空），说明出栈顺序是错误的。**
+
+```java
+/**
+     *
+     * @param push 压入序列
+     * @param pop  弹出序列
+     * @return
+     */
+    public boolean isPopOrder(int[] push, int[] pop) {
+        if (push == null || pop == null || push.length == 0 || pop.length == 0) {
+            return false;
+        }
+
+        int position = 0;
+        LinkedList<Integer> stackAur = new LinkedList<>();
+        for (int i = 0; i < push.length; i++) {
+            stackAur.push(push[i]);
+            while (!stackAur.isEmpty() && stackAur.peek() == pop[position]) {
+                stackAur.pop();
+                position++;
+            }
+        }
+        return stackAur.isEmpty();
+
+    }
+
+    public  static void main(String[] args) {
+        int[] push = {1, 2, 3, 4, 5};
+        int[] pop1 = {4, 5, 3, 2, 1};
+        int[] pop2 = {4, 3, 5, 1, 2};
+        StackPopOrder stackPopOrder = new StackPopOrder();
+        boolean b1 = stackPopOrder.isPopOrder(push, pop1);
+        boolean b2 = stackPopOrder.isPopOrder(push, pop2);
 
 
+        System.out.println(b1);
+        System.out.println(b2);
+    }
+```
 
+假如入栈顺序是`[1, 2, 3, 4, 5]`举个出栈顺序正确的例子`[4, 5, 3, 2, 1]`：
+
+| 操作  | 辅助栈     | 出栈 |
+| ----- | ---------- | ---- |
+| 压入1 | 1          |      |
+| 压入2 | 1, 2       |      |
+| 压入3 | 1, 2, 3    |      |
+| 压入4 | 1, 2 ,3 ,4 |      |
+| 弹出4 | 1,2 ,3     | 4    |
+| 压入5 | 1,2, 3 ,5  |      |
+| 弹出5 | 1, 2, 3    | 5    |
+| 弹出3 | 1,2        | 3    |
+| 弹出2 | 1          | 2    |
+| 弹出1 |            | 1    |
+
+再举个错误的出栈顺序的例子`[4,3,5,1,2]`
+
+| 操作  | 辅助栈     | 出栈 |
+| ----- | ---------- | ---- |
+| 压入1 | 1          |      |
+| 压入2 | 1, 2       |      |
+| 压入3 | 1, 2, 3    |      |
+| 压入4 | 1, 2 ,3 ,4 |      |
+| 弹出4 | 1,2 ,3     | 4    |
+| 弹出3 | 1, 2       | 3    |
+| 压入5 | 1, 2, 5    |      |
+| 弹出5 | 1, 2       | 5    |
+| 弹出2 |            | 2    |
+| 弹出1 |            | 1    |
+
+最后只剩两个元素1, 2时，由于2在栈顶1在栈底，不能先弹出1在弹出2，所以这个出栈顺序是错误的。
 
 
 
