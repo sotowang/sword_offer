@@ -2223,7 +2223,98 @@ public class TreeNode {
 * 功能测试（普通二叉树；对叉树的所有节点都没有左子树或者右子树；只有一个节点的二叉树）。
 * 特殊国俾测试（二叉树的根节点为null）
 
+# 面试题28
 
+## 对称的二叉树
+
+题目：请实现一个函数，用来判断一棵二叉树是不是对称的。如果一棵二叉树和它的镜像一样，那么它是对称的。
+
+### 递归版本
+
+```java
+/**
+     * 使用递归
+     * @param root
+     * @return
+     */
+    public static boolean isSymmetrical(TreeNode root) {
+
+
+        return isSymmetrical(root, root);
+    }
+
+    private static boolean isSymmetrical(TreeNode root1, TreeNode root2) {
+        if (root1 == null && root2 == null) {
+            return true;
+        }
+        if (root1 == null || root2 == null) {
+            return false;
+        }
+        if (root1.val != root2.val) {
+            return false;
+        }
+        return isSymmetrical(root1.left, root2.right)
+                && isSymmetrical(root1.right, root2.left);
+
+    }
+```
+
+如果遇到两棵子树都为空则返回true，这句代码隐含了**“空树也是对称的”**这样的信息。否则，只有一子树为空另一不为空，显然不是对称的；如果两个子树都不为空，比较它俩根结点的值，不相同肯定不是对称的。之后递归地对树的子树进行上述判断，直到检查到叶子结点，如果都满足就返回true。
+
+### 非递归版本
+
+思路和上面一样，非递归实现需要用到两个队列。**队列A专门存入左子树，队列B专门存入右子树。**
+
+入列时，**将左子树的左子结点和右子树的右子结点分别存入队列A和队列B，紧接着还要将左子树的右子结点和右子树的左子结点分别存入队列A和队列B。**
+
+出列时，两个队列同时出列一个元素，根据存入的顺序，这两个出列元素就是左子树的左子结点和右子树的右子结点，或者左子树的右子结点和右子树的左子结点。之后对这两个元素进行比较，比较操作和上面递归版本的一样。
+
+
+
+```java
+/**
+     * 使用队列
+     * @param root
+     * @return
+     */
+    public static boolean isSymmetrical2(TreeNode root) {
+        if (root == null) {
+            return true;
+        }
+        Queue<TreeNode> queue1 = new LinkedList<>();
+        Queue<TreeNode> queue2 = new LinkedList<>();
+
+        queue1.offer(root.left);
+        queue2.offer(root.right);
+
+        TreeNode p = null;
+        TreeNode q = null;
+
+        while (!queue1.isEmpty() && !queue2.isEmpty()) {
+            p = queue1.poll();
+            q = queue2.poll();
+
+            if (p == null && q == null) {
+                continue;
+            } else if (p == null || q == null) {
+                return false;
+            }
+            if (p.val != q.val) {
+                return false;
+            }
+
+            queue1.offer(p.left);
+            queue2.offer(q.right);
+
+            queue1.offer(p.right);
+            queue2.offer(q.left);
+
+        }
+        return true;
+
+
+    }
+```
 
 
 
