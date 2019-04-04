@@ -2316,13 +2316,140 @@ public class TreeNode {
     }
 ```
 
+## 测试用例：
+
+* 功能测试（对称的二叉树：因结构而不对称的二 叉树；经霜你对称但节点的值不对称的二叉树）。
+* 特殊输入测试（二叉树和根节点为null；只有一个节点的二叉树；所有节点的值都相同的二叉树），
 
 
 
+# 面试题29
+
+## 顺时针打印矩阵
+
+题目：输入一个矩阵，按照从外向里以顺时针的顺序依次打印出每一个数字。
+
+> 例如，输入如下矩阵：
 
 
 
+| 1    | 2    | 3    | 4    |
+| ---- | ---- | ---- | ---- |
+| 5    | 6    | 7    | 8    |
+| 9    | 10   | 11   | 12   |
+| 13   | 14   | 15   | 16   |
 
+> 依次打印出数字：1，2，3，4，8，12，16，15，14，13，9，5，6，7，11，10
+
+假设这个矩阵的行数是rows，列数是columns。打印第一圈的左上角的坐标是（0，0），第二圈的左上角的坐标是（1，1）。以此类推，我们注意到，左上角的坐标中行标和列标总是相同的，于是可以在矩阵中选取左上角为（start,start）的一圈作为我们分析的目标。
+
+对于一个5x5的矩阵而言，最后一圈只有一个数字，对应的坐标为（2，2）。我们发现5>2x2。对于一个6x6的矩阵而言，最后一圈有4个数字，其左上角的坐标仍然为（2，2）.我们发现6>2x2依然顾立，于是可以得出，让循环继续的条件是columns> startX x2 并且rows>startYx3。所以我们可以用如下的循环来打针矩阵：
+
+```java
+public void printMatrixClockwisely(int[] numbers, int columns, int rows) {
+        if (numbers == null || columns <= 0 || rows <= 0) {
+            return;
+        }
+        int start = 0;
+        while (columns > start * 2 && rows > start * 2) {
+            PrintMatrixInCircle(numbers, columns, rows, start);
+            ++start;
+        }
+    }
+```
+
+我们把打印一圈分4步：
+
+1. 从左到右打印一行
+2. 从上到下打印一列
+3. 从右到左打印一行
+4. 从下到上打印一列
+
+每一步我们根据起始坐标和终止坐标用一个循环就能打印出一行或者一列。
+
+不过需要注意的是，最后一圈有可能退化成只有一行。只有一列，甚至只有一个数字，因此打针这样的一圈就不再需要4步。
+
+因此，我们需要仔细分析打印每一步的前提条件，第一步总是需要的，因为打针一圈至少有一步。如果只有一行，那就不用第二步了。也就是需要第二步的前提条件是终止行号大于起始行号，需要第三步打印的前提条件是圈内至少有两行两列，也就是说除了要求终止行号大于起始行号，还要求终止列号大于起始列号。同理，需要打针第四步的前提条件是至少有三行两列，因此要求终止行号比起始行号至少大2，同时终止列号大于起始列号。
+
+
+
+```java
+public class PrintMatrix {
+
+    private ArrayList<Integer> list = new ArrayList<>();
+    public void printMatrixClockwisely(int[][] numbers, int columns, int rows) {
+        if (numbers == null || columns <= 0 || rows <= 0) {
+            return;
+        }
+        int start = 0;
+
+        while (columns > start * 2 && rows > start * 2) {
+            PrintMatrixInCircle(numbers, columns, rows, start);
+            ++start;
+        }
+    }
+
+    private void PrintMatrixInCircle(int[][] numbers, int columns, int rows, int start) {
+        int endX = columns - 1 - start;
+        int endY = rows - 1 - start;
+
+        //从左到右打印一行
+        for (int i = start; i <= endX; i++) {
+            int number = numbers[start][i];
+            list.add(number);
+        }
+
+        //从上到下打印一列
+        if (start < endY) {
+            for (int i = start+1; i <= endY ; i++) {
+                int number = numbers[i][endX];
+                list.add(number);
+            }
+        }
+
+        //从历到左打印一行
+        if (start < endX && start < endY) {
+            for (int i = endX - 1; i >= start; i--) {
+                int number = numbers[endY][i];
+                list.add(number);
+            }
+        }
+
+        //从下到上打印一列
+        if (start < endX && start < endY - 1) {
+            for (int i = endY - 1; i >= start + 1; i--) {
+                int number = numbers[i][start];
+                list.add(number);
+            }
+        }
+
+
+    }
+
+    public static void main(String[] args) {
+        PrintMatrix pm = new PrintMatrix();
+        int[][] numbers1 = {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}};
+        int[][] numbers2 = {{1, 2, 3, 4, 5}, {6, 7, 8, 9, 10}, {11, 12, 13, 14, 15}, {16, 17, 18, 19, 20}, {21, 22, 23, 24, 25}};
+        pm.printMatrixClockwisely(numbers1, 4, 4);
+        System.out.println(pm.list);
+        pm.list.clear();
+        pm.printMatrixClockwisely(numbers2, 5, 5);
+        System.out.println(pm.list);
+    }
+
+}
+
+```
+
+## 测试用例
+
+数组中有多行多列；数组中只有一行；数组中只有一列；数组中只有一行一列
+
+# 面试题30
+
+## 包含min函数的栈
+
+题目：定义栈的数据结构，请在该类型中实现一个能够得到栈的最小元素的min函数，在该栈中，调用min，push,及pop的时间复杂度都是O(1)。
 
 
 
