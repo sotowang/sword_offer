@@ -1,10 +1,8 @@
 package edu.xjtu.soto.chap32;
 
 import edu.xjtu.soto.TreeNode;
-import sun.reflect.generics.tree.Tree;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 

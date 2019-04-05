@@ -2,7 +2,6 @@ package edu.xjtu.soto.chap32;
 
 import edu.xjtu.soto.TreeNode;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
