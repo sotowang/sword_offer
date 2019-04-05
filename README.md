@@ -2633,6 +2633,181 @@ public class StackIncludeFuncMin {
 
 最后只剩两个元素1, 2时，由于2在栈顶1在栈底，不能先弹出1在弹出2，所以这个出栈顺序是错误的。
 
+## 测试用例
+
+* 功能测试(输入的两个数组含有多个数字或者只有一个数字；第二个数组是或者不是第一个数组表示的压入序列对应的栈和弹出序列)。
+* 特殊输入测试（输入两个null）
+
+
+
+# 面试题32
+
+## 从上到下打印二叉树
+
+题目一：不分行从上到下打印二叉树
+
+> ```
+> 从上到下打印出二叉树的每个节点，同一层的节点按照从左到右的顺序打印。
+> ```
+>
+
+```java
+private ArrayList<Integer> printFromTopToBottom(TreeNode root) {
+        ArrayList<Integer> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        TreeNode node = null;
+        while (!queue.isEmpty()) {
+            node = queue.poll();
+            result.add(node.val);
+            if (node.left != null) {
+                queue.offer(node.left);
+            }
+            if (node.right != null) {
+                queue.offer(node.right);
+            }
+        }
+        return result;
+    }
+```
+
+先将根结点入列，出列并打印然后按照从左到右的顺序依次将该结点的子结点入列....不断重复这个过程直到队列为空。
+
+## 测试用例
+
+* 功能测试（完全二叉树；所有节点只有左子树的二叉树；所有节点只有右子树的二叉树）。
+* 特殊输入测试（二叉树根节点为null；只有一个节点的二叉树）。
+
+## 分行从上到下打印二叉树
+
+> ```
+> 从上到下按层打印二叉树，同一层的节点按从左到右的顺序打印，每一层打印到一行。
+> ```
+
+和上面类似，现在要求每打印完树的一层需要换行。核心代码其实和上面一样。只是为了确定在何时需要换行操作，**需要用两个变量记录当前层还没有被打印的结点数、下层总结点数。每打印完一行后需要换行，接下来要打印下一层了，所以用下层总结点数更新当前层未被打印的结点数，同时下层总结点数重置为0，准备进行下一层的计数。**
+
+```java
+private void printTreeEveryLayer(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        //下一层节点数
+        int nextLevel = 0;
+
+        //本层未打印节点数，第一层还未打印。故初始化为1
+        int toBePrint = 1;
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+
+        TreeNode node = null;
+        while (!queue.isEmpty()) {
+            node = queue.poll();
+            System.out.print(node.val + " ");
+            toBePrint--;
+
+            if (node.left != null) {
+                queue.offer(node.left);
+                nextLevel++;
+            }
+            if (node.right != null) {
+                queue.offer(node.right);
+                nextLevel++;
+            }
+
+            if (toBePrint == 0) {
+                System.out.println();
+                toBePrint = nextLevel;
+                nextLevel = 0;
+            }
+        }
+    }
+```
+
+## 之字形打印二叉树
+
+> ```
+> 请实现一个函数按照之字形顺序打印二叉树，即第一行按照从左到右的顺序打印，第二层按照从右到左的顺序打针，第三行再按照从左到右的顺序打印，其他行以此类推，
+> ```
+
+举个例子，下面的二叉树，打印顺序是1 3 2 4 5 6 7
+
+```
+   	   1
+  	 /   \
+    2      3
+   / \    / \
+  4   5  6   7
+```
+
+先搞清楚要求：根结点先被打印，然后从右往左打印第二行，接着从左往右打印第三行...以此类推，**总之偶数层就从右往左打印，奇数行就从左到右打印**。依然需要某种数据结构来存放结点，栈可以满足我们的打印顺序：当前层为奇数层时，按照**从左到右**的顺序将下层结点（偶数层）压入栈中，出栈的时候就是从右往左打印偶数层了；当前层是偶数层时，按照**从右到左**的顺序将下层结点（奇数层）压入栈中，由于此时先出栈的是偶数层最右边的结点，所以可以保证下层最右边的结点被压到了栈底，而最左边的结点位于栈顶，出栈的时候就是从左往右打印奇数层了...如此反复交替。
+
+为了达到上述的交替效果，需要用到**两个栈，一个栈stackOdd存奇数层的结点，另一个栈stackEven存偶数层的结点。**
+
+- 奇数层，其下层的结点按左到右的顺序入栈
+- 偶数层，其下层的结点按右到左的顺序入栈
+
+奇偶层顺序是固定的，即根结点是奇数层，则奇偶顺序是“奇偶奇偶....“
+
+stackOdd存放的是某一奇数层的全部结点，**stackOdd不为空说明当前层是奇数层，全部弹出后为空，该处理下一层了;因此当stackOdd为空时当前层必然是偶数层**，stackOdd就这样不断为空，不为空...交替，正好反映了当前层是奇数层还是偶数层，进而采取不同的结点存入顺序即可。
+
+```java
+public static void printTreeZ(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+
+        LinkedList<TreeNode> stackOdd = new LinkedList<>();
+        LinkedList<TreeNode> stackEven = new LinkedList<>();
+
+        TreeNode node = null;
+
+        stackOdd.push(root);
+
+        while (!stackOdd.isEmpty() || !stackEven.isEmpty()) {
+            if (!stackOdd.isEmpty()) {
+                while (!stackOdd.isEmpty()) {
+                    node = stackOdd.pop();
+                    System.out.print(node.val + " ");
+                    if (node.left != null) {
+                        stackEven.push(node.left);
+                    }
+                    if (node.right != null) {
+                        stackEven.push(node.right);
+                    }
+
+                }
+            }else {
+
+                while (!stackEven.isEmpty()) {
+                    node = stackEven.pop();
+                    System.out.print(node.val + " ");
+                    if (node.right != null) {
+                        stackOdd.push(node.right);
+                    }
+                    if (node.left != null) {
+                        stackOdd.push(node.left);
+                    }
+                }
+            }
+            System.out.println();
+        }
+
+    }
+```
+
+# 面试题33
+
+## 二叉搜索树的后序遍历序列
+
+>```
+>题目：输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历结果。如果是则返回true，否则返回false，假设输入的数组的任意两个数字都互不相同。例如。输入数组（5，7，6，9，11，10，8}，则返回true，因为这个整数良列是图4.9二叉搜索树的后序遍历结果。如果输入的数组是{7，4，6，5}，由于没有哪棵二叉搜索树的后序遍历结果是这个序列，因此返回false。
+>```
+
+
+
 
 
 
