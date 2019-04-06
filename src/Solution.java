@@ -1,6 +1,7 @@
 import edu.xjtu.soto.ListNode;
 import edu.xjtu.soto.TreeLinkNode;
 import edu.xjtu.soto.TreeNode;
+import edu.xjtu.soto.RandomListNode;
 
 import java.util.*;
 

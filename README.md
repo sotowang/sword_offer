@@ -2968,6 +2968,126 @@ public class FindPath {
 * 功能测试（二叉树中有一条，或多条符合要求的路径；二叉树中没有符合要求的路径）。
 * 特殊输入测试（指向二叉树根节点的指针为null）。
 
+# 面试题35
+
+## 复杂链表的复制
+
+> ```
+> 题目：请实现函数ComplexListNode Clone(ComplexListNode head),复制一个复杂链表，在复杂链表中，每个节点除了有一个next指针指向下一全邛是，还有一个sibling指针指向链表中的任意节点或者null
+> ```
+
+节点定义如下：
+
+```java
+public class RandomListNode {
+    int label;
+    RandomListNode next = null;
+    RandomListNode random = null;
+    RandomListNode(int label) {
+        this.label = label;
+    }
+}
+```
+
+**注意不可将链表头结点引用返回，所以需要自己new一个结点出来。**要完成复杂链表的复制，第一步要完成普通链表的复制，普通链表的复制可以用一个栈复制每一个结点，之后逐个弹出并连接起来。对于本题有两种策略：
+
+第一种是，在复制普通链表时，将原链表结点和复制链表的结点成对存入`HashMap<N, N'>`中，建立一对一的映射。当进行随机结点复制时，遍历原链表，如果某结点的随机结点不为空，那么根据HashMap能以O(1)的时间找到对应的复制链表结点中，若原始链表的结点M指向随机结点S，那么复制链表的M'也要指向结点S'，这种方法时间复杂度为O(N)，但空间复杂度为O(N)。
+
+更好的方法是，插入、连接、拆分三步法。
+
+- 插入：在原始链表的每个结点后插入一个值和它一样的新结点；则有`oriNode.next == cloneNode`这样的关系；
+- 连接随机结点：遍历插入新结点后的链表，在访问原始链表中的那些结点时，判断其是否有随机结点，有的话`cloneNode.random = oriNode.random.next`这里`oriNode.random.next`表示原始链表随机结点的下一个结点，其实就是复制链表的随机结点。
+- 拆分原始链表和复制链表：将奇数结点相连就是原始链表，将偶数结点相连就是我们想要的复制链表。返回复制链表的头结点即可。
+
+```java
+public class CloneNodes {
+    public RandomListNode cloneNodes(RandomListNode head) {
+
+        if (head == null) {
+            return null;
+        }
+        RandomListNode pNode = head;
+
+        //复制结点
+        while (pNode != null) {
+            RandomListNode pClone = new RandomListNode(pNode.label+"'");
+            pClone.next = pNode.next;
+            pNode.next = pClone;
+            pNode = pClone.next;
+        }
+
+        //设置每个复制结点的random
+        pNode = head;
+        while (pNode != null) {
+            if (pNode.random != null) {
+                pNode.next.random = pNode.random.next;
+            }
+            pNode = pNode.next.next;
+        }
+
+        //拆分链表
+        pNode = head;
+        RandomListNode cloneHead = pNode.next;
+        RandomListNode pcloneNode = cloneHead;
+
+        while (pNode != null) {
+            pNode.next = pNode.next.next;
+
+            if (pcloneNode.next != null) {
+                pcloneNode.next = pcloneNode.next.next;
+            }
+            pNode = pNode.next;
+            pcloneNode = pcloneNode.next;
+        }
+
+        return cloneHead;
+
+
+    }
+
+    public static void main(String[] args) {
+        CloneNodes cn = new CloneNodes();
+        RandomListNode r1 = new RandomListNode("A");
+        RandomListNode r2 = new RandomListNode("B");
+        RandomListNode r3 = new RandomListNode("C");
+        RandomListNode r4 = new RandomListNode("D");
+        RandomListNode r5 = new RandomListNode("E");
+
+        r1.next = r2;
+        r2.next = r3;
+        r3.next = r4;
+        r4.next = r5;
+
+        RandomListNode head = cn.cloneNodes(r1);
+
+        while (head != null) {
+            System.out.println(head.label);
+            head = head.next;
+        }
+
+    }
+}
+
+```
+
+## 测试用例
+
+* 功能测试（节点中的sibling指向节点自身：两个节点的sibling形成环状结构；链表中只有一个节点）
+* 特殊输入测试（指向链表头节点的指针为null指针）
+
+# 面试题36
+
+> ```
+> 题目：输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的节点，只能调整树中节点指针的指向。
+> 比如，输入图中左边的二叉搜索树，则输出转换之后的排序双向链表。
+> ```
+
+二叉树节点定义如下：
+
+
+
+
+
 
 
 
