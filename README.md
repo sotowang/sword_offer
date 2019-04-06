@@ -2880,6 +2880,96 @@ public class VerifySquenceOfBST {
 
 ```
 
+# 面试题34
+
+## 二叉树路径与指定值相等
+
+题目：输入一棵二叉树和一个整数，打印出二叉树中节点值的和为输入整数的所有路径，从树的根节点开始往下一直到叶节点所经过的节点形成一条路径，
+
+二叉树节点的定义如下：
+
+```java
+public class TreeNode {
+
+    public int val = 0;
+    public TreeNode left = null;
+    public TreeNode right = null;
+
+    public TreeNode(int val) {
+        this.val = val;
+    }
+}
+```
+
+当用前序遍历的方式访问到某一节点时，我们把该节点添加到路径上，并累加该节点的值。如果该节点为叶节点，并且路径中节点值的和刚好等于输入的整数，则当前路径符合要求，我们把粌打印出来。如果当前节点不是叶节点，则继续访问它的子节点。当前节点访问结束后，递归函数将自动回到它的父节点。因此，我们在函数退出之前要在路径上删除当前节点并减去当前节点的值，以确保返回父节点时路径刚好是从根节点到父节点。我们不难看出保存路径的数据结构实际上是一个栈，因为路径要屯递归调用状态一致，而递归调用的本质就是一个压栈和出栈的过程。
+
+```java
+public class FindPath {
+    public ArrayList<ArrayList<Integer>> findPath(TreeNode root, int target) {
+        ArrayList<ArrayList<Integer>> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+
+        ArrayList<Integer> path = new ArrayList<>();
+        preOrder(root, target, path, result);
+        return result;
+
+    }
+
+    private void preOrder(TreeNode root, int curValue, ArrayList<Integer> path, ArrayList<ArrayList<Integer>> result) {
+        if (root == null) {
+            return;
+        }
+
+        //模拟节点进栈
+        path.add(root.val);
+        curValue -= root.val;
+
+        // 只有在叶子结点处才判断是否和目标值相同，若相同加入列表中
+        if (root.left == null && root.right == null) {
+            if (curValue == 0) {
+                result.add(new ArrayList<>(path));
+            }
+        }
+        preOrder(root.left, curValue, path, result);
+        preOrder(root.right, curValue, path, result);
+
+        path.remove(path.size() - 1);
+        curValue += root.val;
+
+    }
+
+    public static void main(String[] args) {
+        FindPath fp = new FindPath();
+        TreeNode root = new TreeNode(10);
+        TreeNode root1 = new TreeNode(5);
+        TreeNode root2 = new TreeNode(12);
+        TreeNode root3 = new TreeNode(4);
+        TreeNode root4 = new TreeNode(7);
+
+
+        root.left = root1;
+        root.right = root2;
+        root1.left = root3;
+        root1.right = root4;
+
+
+        ArrayList<ArrayList<Integer>> res = fp.findPath(root, 22);
+
+        System.out.println(res);
+    }
+}
+
+```
+
+## 测试用例
+
+* 功能测试（二叉树中有一条，或多条符合要求的路径；二叉树中没有符合要求的路径）。
+* 特殊输入测试（指向二叉树根节点的指针为null）。
+
+
+
 
 
 
