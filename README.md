@@ -3077,18 +3077,117 @@ public class CloneNodes {
 
 # 面试题36
 
+## 二叉搜索树与双向链表转换
+
 > ```
 > 题目：输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的节点，只能调整树中节点指针的指向。
 > 比如，输入图中左边的二叉搜索树，则输出转换之后的排序双向链表。
 > ```
 
+```
+        10
+  6             14          ===>   4 <==> 6 <==> 8 <==> 10 <==>12 <==> 14 <==> 16
+4    8       12      16
+```
+
+
+
 二叉树节点定义如下：
 
+```java
+
+public class TreeNode {
+    public int val = 0;
+    public TreeNode left = null;
+    public TreeNode right = null;
+
+    public TreeNode(int val) {
+        this.val = val;
+    }
+}
+```
+
+看到这道题我第一反映就是，二叉树的线索化，不过还是有些区别的，下面会讨论。按照二叉搜索树的特点，最左边的结点是值最小的，而题目要求得到排序的双向链表，所以基本确定下来**中序遍历**的方法。
+
+二叉树的线索化：是针对每个叶子结点，为了将空指针利用起来，可以将叶子结点的左子结点指向其遍历顺序的前驱，右子结点指向遍历序列的后继。根据遍历顺序的不同，线索化也分为前序、中序、后序。二叉树的结点定义中需要加入布尔变量，用来标示每个结点的左右指针是否被线索化了（这些标志只可能在叶子结点为true）
+
+```java
+public class Convert {
+    private TreeNode preNode;
+
+    public TreeNode convert(TreeNode root) {
+
+        if (root == null) {
+            return null;
+        }
+
+        TreeNode pRoot = root;
+
+        //得到双向链表
+        convertNode(root);
+
+        //向左找到双向链表的头结点
+        while (root.left != null) {
+            root = root.left;
+        }
+        return root;
+    }
+
+    //中序遍历改变指针
+    private void convertNode(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        convertNode(root.left);
+
+        root.left = preNode;
+
+        if (preNode != null) {
+            preNode.right = root;
+
+        }
+        preNode = root;
+
+        convert(root.right);
 
 
+    }
 
+    public static void main(String[] args) {
+        Convert convert = new Convert();
 
+        TreeNode r1 = new TreeNode(10);
+        TreeNode r2 = new TreeNode(6);
+        TreeNode r3 = new TreeNode(14);
+        TreeNode r4 = new TreeNode(4);
+        TreeNode r5 = new TreeNode(8);
+        TreeNode r6 = new TreeNode(12);
+        TreeNode r7 = new TreeNode(16);
 
+        r1.left = r2;
+        r1.right = r3;
+        r2.left = r4;
+        r2.right = r5;
+        r3.left = r6;
+        r3.right = r7;
+
+        TreeNode res = convert.convert(r1);
+
+        while (res != null) {
+            System.out.println(res.val);
+            res = res.right;
+        }
+    }
+
+}
+```
+
+最后因为需要返回双向链表的头结点，只需从二叉树的根结点开始，向左遍历，即可找到双向链表的头结点。
+
+## 测试用例
+
+* 功能测试（输入的二叉树是完全二叉树；所有节点都没有左/右子树的二叉树；只有一个节点的二叉树）。
+* 特殊输入测试（批向二叉树根节点的指针为null）
 
 
 
