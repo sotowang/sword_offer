@@ -400,7 +400,7 @@ public class TreeNode {
 }
 ```
 
-## 递归
+### 递归
 
 ```java
  public TreeNode reconstructBinaryTree(int[] preOrder, int[] inOrder) {
@@ -3188,6 +3188,130 @@ public class Convert {
 
 * 功能测试（输入的二叉树是完全二叉树；所有节点都没有左/右子树的二叉树；只有一个节点的二叉树）。
 * 特殊输入测试（批向二叉树根节点的指针为null）
+
+---
+
+# 面试题37
+
+## 序列化二叉树
+
+> ```
+> 题目：请实现五肉个函数，分别用来序列化和反序列化二叉树。
+> ```
+
+刚开始想法太死板了，只记得中序和前序或者中序和后续两个序列才能决定一棵唯一的二叉树，于是分别进行了前序、中序遍历，前序和中序的序列用"|"分隔，之后再根据这个分隔符分成前序和中序序列，最后采用面试题7——重建二叉树的思路进行反序列化。思路是正确的但是太麻烦。
+
+其实遇到空指针可以也用一个特殊的字符表示，比如“#”，**这样前序遍历序列就可以表示唯一的一棵二叉树了。**对于空指针也用一个字符表示，可称这样的序列为**扩展序列**。而二叉树的建立，必须先要建立根结点再建立左右子树（root为空怎么调用root.left是吧），所以必须前序建立二叉树，那么序列化时也应该用前序遍历，保证了根结点在序列前面。
+
+不能使用中序遍历，因为**中序扩展序列**是一个无效的序列，比如
+
+```
+   A      B
+  / \      \
+ B   C  和  A  中序扩展序列都是 #B#A#C#
+             \
+              C
+```
+
+先来看序列化的代码，其实就是在前序遍历的基础上，如果遇到空指针就用“#”表示。
+
+```java
+public String serialize(TreeNode root) {
+        if (root == null) {
+            return null;
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        preOrxder(root, sb);
+
+        return sb.toString();
+
+    }
+
+    private void preOrxder(TreeNode root, StringBuilder sb) {
+
+        if (root == null) {
+            sb.append("# ");
+            return;
+        }
+        sb.append(root.val).append(" ");
+
+        preOrxder(root.left, sb);
+        preOrxder(root.right, sb);
+    }
+
+```
+
+再来看反序列化，通过前序遍历得到的字符串，重建二叉树。
+
+```java
+private TreeNode deSerialize(String sb) {
+        if (sb == null || sb.length() == 0) {
+            return null;
+        }
+
+        String[] seq = sb.split("\\s");
+
+        return reconstructBST(seq);
+        
+
+
+    }
+
+    private int index = -1;
+    private TreeNode reconstructBST(String[] seq) {
+        index++;
+        if (seq.length == 0) {
+            return null;
+        }
+
+        //注意这里的写法
+        if (seq[index].equals("#")) {
+            return null;
+        }
+
+        TreeNode root = new TreeNode(Integer.parseInt(seq[index]));
+
+        root.left = reconstructBST(seq);
+        root.right = reconstructBST(seq);
+
+
+        return root;
+    }
+```
+
+由于前序遍历时每存入一个结点值或者存入“#”后面都紧跟着一个空格。所以最后得到的序列时这样的格式`A B # # C # #`，可以根据空格将其分割成`[A, B, #, #, C, #, #]`这样就还原了各个结点的值，根据这些值重建二叉树。由于得到的是二叉树的前序序列，因此也要以前序重建二叉树，当遇到结点值是“#”时说明这是一个空指针，那么返回null给上层的父结点。如果不为“#”就递归地重建该结点的左右子树。注意这里使用了一个int型的index，用于表示当前结点在String[] seq中的索引，无需担心index在seq中会造成数组下标越界，因为最后一个结点的左右子树肯定是null，必然会终止递归。
+
+```
+public static void main(String[] args) {
+        TreeNode r1 = new TreeNode(1);
+        TreeNode r2 = new TreeNode(2);
+        TreeNode r3 = new TreeNode(3);
+        TreeNode r4 = new TreeNode(4);
+        TreeNode r5 = new TreeNode(5);
+        TreeNode r6 = new TreeNode(6);
+        r1.left = r2;
+        r1.right = r3;
+
+        r2.left = r4;
+        r3.left = r5;
+        r3.right = r6;
+
+        SerializeBT sb = new SerializeBT();
+        String str = sb.serialize(r1);
+        System.out.println(str);
+
+
+        TreeNode r = sb.deSerialize(str);
+        System.out.println(r);
+
+    }
+```
+
+
+
+
 
 
 
