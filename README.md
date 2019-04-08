@@ -3743,6 +3743,79 @@ public class MoreThanHalfNum {
 >
 > 例如，输入4，5，1，6，2，7，3，8这8个数字，则最小的4个数字是1，2，3，4
 
+### 切分法，时间复杂度O(n)
+
+如果做了面试题39，这道题很容易想到直接使用切分法。几乎一模一样的代码。注意k的取值范围，不能比输入数组的长度还要大，也不能为非正数。
+
+**采用这种思路是有限制的，我们需要修改输入的数组，因为函数Partition会调整数组中数字的顺序，如果面试官要求不能修改输入的数组，那我们该怎么办呢？**
+
+### 基于最大堆（适用于海量数据处理）o(nlogk)
+
+有一个很简单的想法：设想有一个容器，其大小不超过k时，就不断存入元素，只要容量超过k，就剔除其中最大的元素，重复该过程，当遍历所有元素后，该容器中剩下的刚好就是最小的k个元素。
+
+哪种容器能快速得到最大元素，可能第一想到的就是**最大堆**。
+
+上面的方法还是太麻烦了，面试了哪有那么多时间让你手写一个堆和一大堆代码的切分方法。而且上述两种方法都改变了原数组。**Java内置了优先队列，就是基于堆实现的，默认是最小堆，可以传入Comparator改变堆的形式。**
+
+```java
+PriorityQueue<Integer> maxHeap = new PriorityQueue<>((a, b) -> b.compareTo(a)); // 注意参数a、b的顺序和compareTo方法中a、b的位置
+// 或者直观的写法
+PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Comparator.reversOrder());
+```
+
+
+
+```java
+public class GetLeastNumbers {
+
+    public ArrayList<Integer> getLeastNumbers(int[] arrays, int k) {
+        ArrayList<Integer> list = new ArrayList<>();
+        if (arrays == null || arrays.length == 0 || k <= 0 || k > arrays.length) {
+            return list;
+        }
+
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Comparator.reverseOrder());
+        for (int a : arrays) {
+            maxHeap.offer(a);
+
+            //只要size大于k，不断剔除最大值，最后优先队列里只剩最小的k个
+            if (maxHeap.size() > k) {
+                maxHeap.poll();
+            }
+        }
+        list.addAll(maxHeap);
+        return list;
+    }
+
+
+    public static void main(String[] args) {
+        GetLeastNumbers gln = new GetLeastNumbers();
+        int[] arrays = {4, 5, 1, 6, 2, 7, 3, 8};
+        ArrayList list = gln.getLeastNumbers(arrays, 4);
+        System.out.println(list);
+
+    }
+
+}
+
+```
+
+
+
+优先队列可以以O(1)的时间删除堆顶元素，但是由于删除后还要恢复堆有序状态，而优先队列的大小不会超过k + 1，因此时间复杂度为O(lg k)。又由于输入中有n个数，故总的时间复杂度为O(nlgk)。
+
+优先队列中的元素从来不会超过k + 1，因此即使有海量的数据不用担心，因为无需将海量数据一次性加载进内存，只需要每次读取一个值，然后剔除一个最大值，优先队列的大小将长期稳定在k。
+
+比较一下这几个方法，**切分法是最快的，但是不适合用于处理海量数据；基于优先队列的实现虽然速度满了点但是可以进行海量数据处理**，看具体应用场景了。
+
+## 测试用例
+
+* 功能测试（输入的数组中有相同的数字；输入的数组中没有相同的数字）
+* 边界值测试（输入的k等于1或者等于数组的长度）
+* 特殊输入测试（k小于1；k大于数组的长度；指向数组的指针为null）
+
+
+
 
 
 
