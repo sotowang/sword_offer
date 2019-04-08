@@ -3586,11 +3586,11 @@ public class Permutation3 {
 
 > 题目：数组中有一个数字出现的次数超过数组长度的一半，请找出为个数字。
 >
-> 例如，输入一个长度为9的数组{1，2，3，2，2，2，5，4，2}。由于数字2在数组中出现了8次，超过数组长度的一半，因此输出2。
+> 例如，输入一个长度为9的数组{1，2，3，2，2，2，5，4，2}。由于数字2在数组中出现了4次，超过数组长度的一半，因此输出2。
 
 可以先将数组排序，然后统计数字出现的次数，先将第一个数字出现次数初始化为1，如果遇到同样的数字，就加1，遇到不一样的就重新初始化为1重新开始计数，直到某个数字计数值大于n / 2（n是数组的长度），终止循环，返回当前数字就是我们要的答案。
 
-但是排序算法的时间复杂度为O(nlgn)，有没有更快的方法呢。
+**但是排序算法的时间复杂度为O(nlgn)，有没有更快的方法呢。**
 
 ### 切分法，时间复杂度O(n)
 
@@ -3598,6 +3598,71 @@ public class Permutation3 {
 
 - 切分法找出中位数
 - 检查中位数
+
+```java
+ /**
+     * 使用快速排序思想，切分法。时间复杂度o(n)
+     * @param nums
+     * @return
+     */
+    public int moreThanHalfNum2(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        int k = nums.length / 2;
+        int low = 0;
+        int high = nums.length - 1;
+        while (high > low) {
+            int j = partition(nums, low, high);
+            if (j == k) {
+                return nums[k];
+            } else if (j < k) {
+                low = j + 1;
+            } else {
+                high = j - 1;
+            }
+        }
+
+        //检查
+        return check(nums, nums[k]) ? nums[k] : 0;
+    }
+
+    /**
+     * 快速排序切分
+     * @param nums
+     * @param low
+     * @param high
+     * @return
+     */
+    private int partition(int[] nums, int low, int high) {
+        int i = low;
+        int j = high;
+
+        if (i < j) {
+            int piv = nums[low];
+            while (i < j) {
+                while (nums[j] > piv) {
+                    j--;
+                }
+                if (i < j) {
+                    nums[i] = nums[j];
+                    i++;
+                }
+
+                while (nums[i] < piv) {
+                    i++;
+                }
+                if (i < j) {
+                    nums[j] = nums[i];
+                    j--;
+                }
+            }
+            nums[i] = piv;
+        }
+        return i;
+
+    }
+```
 
 
 
@@ -3607,7 +3672,7 @@ public class Permutation3 {
 
 ```java
 public class MoreThanHalfNum {
-    public int moreThanHalfNum(int[] nums) {
+    public int moreThanHalfNum1(int[] nums) {
         if (nums == null || nums.length == 0) {
             return 0;
         }
@@ -3630,24 +3695,34 @@ public class MoreThanHalfNum {
             }
         }
 
-        count = 0;
-        for (int i = 0; i < nums.length; i++) {
-            if (result == nums[i]) {
+        return check(nums, result) ? result : 0;
+
+    }
+
+    private boolean check(int[] nums, int result) {
+        int count = 0;
+        for (int num : nums) {
+            if (num == result) {
                 count++;
             }
         }
-
-        return count > nums.length / 2 ? result : 0;
-
+        return count > nums.length / 2;
     }
+   }
 
     public static void main(String[] args) {
         MoreThanHalfNum mthn = new MoreThanHalfNum();
 
-        int[] nums = {1, 2, 3, 2, 2, 2, 5, 4, 2};
+        int[] nums1 = {1, 2, 3, 2, 2, 2, 5, 4, 2};
 
+        int[] nums2 = {1,2};
 
-        System.out.println(mthn.moreThanHalfNum(nums));
+        System.out.println(mthn.moreThanHalfNum2(nums1));
+        System.out.println(mthn.moreThanHalfNum2(nums2));
+
+        System.out.println("**********");
+        System.out.println(mthn.moreThanHalfNum1(nums1));
+        System.out.println(mthn.moreThanHalfNum1(nums2));
     }
 }
 
@@ -3658,9 +3733,15 @@ public class MoreThanHalfNum {
 * 功能测试（输入的数组中存在一个出现次数超过数组长度一半的数字；输入的数组中不契在一个出现次数超过数组长度一半的数字）。
 * 特殊输入测试（输入的数组中只有一个数字‘；输入null）。
 
+---
 
+# 面试题40
 
+## 最小的k个数
 
+> 题目：输入n个整数，找出其中最小的k个数。
+>
+> 例如，输入4，5，1，6，2，7，3，8这8个数字，则最小的4个数字是1，2，3，4
 
 
 
