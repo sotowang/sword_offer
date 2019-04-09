@@ -4072,6 +4072,108 @@ public int numberOf1Between1AndN2(int n) {
 * 边界值测试（输入0，1等）
 * 性能测试（输入较大的数字，如10000，21235等）
 
+# 面试题44
+
+## 数字序列中某一位数字
+
+>  题目： 数字以0123456789101112131415... 的格式序列化得到一个字符序列中。在这个序列中，第5位（从0开始计数）是5，第13位是1，第19位是4，等等。请写一个函数，求任意第n位对应的数字。
+
+从数字本身的规律入手。如果要找第1001位，肯定不会考虑0~9这十位吧？接下来10-99也就有180位而已，不考虑，每次不考虑的情况需要减去已缩小查找范围，因此在排除掉0-99共180+10后还剩881，也就是说我们原来是从0开始找到第1001位，现在只需从100开始找到第991位即可。接下来看100-999共2700位，由于881  < 2700，所以这个数必然在100~999的范围内。881 = 270 * 3 + 1，说明这个数是100开始之后的第270个数的第1位（从0开始计算索引），也就是370的第一位数，即7。
+
+有了思路后，要实现几个关键的方法，首先是根据位数得到一个区间的开始数字。区间划分为：0-9， 10-99， 100-999...比如n = 1，一位数的开始数是0; n = 2,两位数的开始数是10; n = 3,三位数的开始数是100...
+
+其次因为要缩小查找范围，所以要根据位数知道该范围内总共有多少个数字，比如n = 1, 一位数0-9的范围共10个数；n = 2，两位数10-99的范围共90个数；n = 3，三位数100-999的范围共900个数....
+
+还需要一个方法，一旦锁定范围，根据当前的位数能知道包含index处数字的数是几，然后从该数中找到要求的那位。
+
+```java
+public class DigitAtIndex {
+    public int digitAtIndex(int index) {
+        if (index < 0) {
+            return -1;
+        }
+        //位数，digits = 1；表示一位数，0-9区间；digjts = 2表示两位数，10-99区间...
+        int digits = 1;
+        while (true) {
+            int numbers = numOfRange(digits);
+            //范围锁定，numbers*digits表示该区间共有多少位数字，如digits = 2，范围10-99 有 2*90=80位
+            if (index < numbers * digits) {
+                return digitAt2(index, digits);
+            }
+
+            //缩小范围
+            index -= numbers * digits;
+            digits++;
+        }
+    }
+
+    /**
+     * 根据位数得到范围内的个数，比如1位，0-9共10个
+     * 2位，10-99共90个
+     * 3们，100-999 共900个
+     * @param n
+     * @return
+     */
+    private int numOfRange(int n) {
+        if (n == 1) {
+            return 10;
+        }
+        return (int)(9 * Math.pow(10, n - 1));
+    }
+
+    /**
+     * n位数范围内的的第一个数，比如1位数，0~9，第一个是0
+     * 3位数，100~199，第一个数是100
+     * @param n
+     * @return
+     */
+    private int beginNumber(int n) {
+        if (n == 1) {
+            return 0;
+        }
+        return (int) Math.pow(10, n-1);
+    }
+
+    /**
+     * 返回某数的第d位，第0位是个位，第1位是十位
+     * @param value
+     * @param d
+     * @return
+     */
+    private int digitAt(int value, int d) {
+        return (value/(int)Math.pow(10,d))% 10;
+    }
+
+    /**
+     * 锁定范围后，根据位数就能得到包含index处那位数的数字，然后从该数中找到要求的那位
+     * @param seqIndex
+     * @param digits
+     * @return
+     */
+    private int digitAt2(int seqIndex, int digits) {
+        int number = beginNumber(digits) + seqIndex / digits;
+        return digitAt(number, digits - seqIndex % digits - 1);
+    }
+
+
+    public static void main(String[] args) {
+        DigitAtIndex a = new DigitAtIndex();
+        System.out.println(a.digitAtIndex(1001));
+
+    }
+
+}
+
+```
+
+
+
+
+
+
+
+
+
 
 
 
