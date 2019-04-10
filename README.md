@@ -4313,6 +4313,111 @@ public class TransLateNumToString {
 }
 ```
 
+## 测试用例
+
+* 功能测试（只有一位数字：包含多位数字）。
+* 特殊输入测试（负数：0；包含25，26的数字）
+
+# 面试题47
+
+## 礼物有最大价值
+
+> 题目：在一个mxn的棋盘的每一格都放有一个礼物，每个礼物都有一定的价值（价值大于0）。你可以从棋盘的左上角开始拿格子里的礼物，并每次向右或者向下移动一格，直到到达棋盘的右下角。给定一个棋盘及其上面的礼物，请计算你最多能拿到多少价值的礼物？
+
+例如，在下面的棋盘中，如果沿着带下画线的数字的线路（1，12，5，7，7，16，5），那么我们能拿到的最大价值为53的礼物。
+
+| `1`  | 10   | 3    | 8    |
+| ---- | ---- | ---- | ---- |
+| `12` | 2    | 9    | 6    |
+| `5`  | `7`  | 4    | 11   |
+| 3    | `7`  | `16` | `5`  |
+
+### 递归求解
+
+```java
+public int getMaxValue(int[][] gifts) {
+        if (gifts == null || gifts.length == 0) {
+            return 0;
+        }
+        int rows = gifts.length;
+        int cols = gifts[0].length;
+        int[] max = {0};
+        select(gifts, 0, 0, max,rows,cols,0);
+        return max[0];
+    }
+
+    private void select(int[][] gifts, int row, int col,int[] max,int rows, int cols,int val) {
+        if (row >= rows || col >= cols) {
+            return;
+        }
+        val += gifts[row][col];
+        if (row == rows - 1 && col == cols - 1) {
+            if (val > max[0]) {
+                max[0] = val;
+            }
+        }
+        select(gifts, row + 1, col, max, rows, cols, val);
+        select(gifts, row , col+1, max, rows, cols, val);
+
+    }
+```
+
+每进入一个格子，累加礼物价值。当到达右下角时，将累加和与全局的max变量比较，如果某条路径的累加和比max大，就更新max。边界控制很重要，在超出行或者超出列的范围后，直接返回。然后就不断在两个方向递归——右边或者下边。全局max由于是int型，作为参数并不能在递归调用后被改变，所以需要一个**对象**，由于只需要存放一个值，一个长度为1的对象数组即可。
+
+### 动态规划求解(要到达当前格子有两个方向)
+
+设当前格子能获得的最大礼物价值为f(i, j), 要到达该位置，只有两种情况：
+
+- 从该位置的左边来，即f(i, j-1)
+- 从该位置的上边来，即f(i-1, j)
+
+f(i, j)处的礼物价值设为gift(i, j)
+
+那么到达f(i, j)处能收集到的最大礼物价值为
+
+max[f(i, j- 1), f(i-1, j)]+gift[i, j]
+
+可以发现，要知道当前格子能获得最大礼物价值，需要用到当前格子左边一个和上面一个格子的最大礼物价值和。所以从左上角开始，计算到达每一个格子能获得最大礼物价值是多少，并保存下这些结果。在后面求其他格子的最大礼物价值时会用到前面的结果。基于这个思路可写出如下代码。
+
+```java
+/**
+     * 动态规划求解
+     * @param gifts
+     * @return
+     */
+    public int getMaxValue2(int[][] gifts) {
+        if (gifts == null || gifts.length == 0) {
+            return 0;
+        }
+        int rows = gifts.length;
+        int cols = gifts[0].length;
+
+        int[][] max = new int[rows][cols];
+
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                int left = 0;
+                int up = 0;
+
+                if (row > 0) {
+                    up = max[row - 1][col];
+                }
+                if (col > 0) {
+                    left = max[row][col - 1];
+                }
+                max[row][col] = Math.max(up, left) + gifts[row][col];
+            }
+        }
+        return max[rows - 1][cols - 1];
+    }
+```
+
+用到一个二维数组保存到达每一个格子时能获得的最大礼物价值。up和left分别是上面说的f(i-1, j)和f(i, j -1)，循环完毕后，返回到达右下角处能获得最大礼物价值即可。
+
+### 上面方法的优化——用一维数组代替二维数组
+
+
+
 
 
 
