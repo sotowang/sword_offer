@@ -4212,6 +4212,107 @@ public class PrintMinNumber {
 
 ```
 
+# 面试题46
+
+## 把数字翻译成字符串
+
+> 题目：给定一个数字，我们按照如下地铡把它翻译为字符串：0翻译成”a“，1管充成”b“，......，11翻译成”l“。25秒充成”z“。一个数字可能有多个翻译。
+>
+> 例如，12258有5种不同的翻译，分别是”bccfi“，”bwfi“，bczi”，“mcfi”，“mzi”。请编程实现一个函数，用来计算一个数字有多少种不同的翻译方法。
+
+举个简单的例子，比如258，我们可以先翻译第一个数字，得到c，也可以翻译前两个数字，得到z；如果先翻译了一个数，对于剩下的58，和上面一样可以选择只翻译一位，得到f，也可以翻译两位（在这个例子中是不合法的，58没有与之映射的字符），如果先翻译了两位，对于剩下的8，只能有一种翻译方法了，得到i。所以最后得到两种翻译方法，cfi和zi。
+
+从这个简单的例子可以得到一般性的结论，令f(i)为从第i位开始的不同翻译的数目，因为每次可以选择只翻译一个数字，也可一次翻译两个数字，而对于剩下的数字也可以采用同样的方法，这是一个递归问题。
+$$
+f(i) = f(i+1) + g(i, i+1)f(i+2), 0 \le i < n
+$$
+其中n为数字的位数，
+$$
+g(i, i+ 1)
+$$
+可取0或者1，当一次翻译两个数字时，如果这个数字在
+$$
+10 \le m \le25
+$$
+的范围内，这就是一个可翻译的数，此时
+$$
+g(i, i + 1)
+$$
+为1，否则为0。根据题意，我们最后就是要求得
+$$
+f(0)
+$$
+
+### 从右往左翻译的循环
+
+如果自下而上，从小的结果出发，保存每一步计算的结果，以供下一步使用，也就是我们按照从右到左的顺序翻译。
+$$
+f(i) = f(i+1) + g(i, i+1)f(i+2), 0 \le i < n
+$$
+
+
+对于上面的公式，也就是先求出
+$$
+f(n -1)
+$$
+，然后求出
+$$
+f(n -2)
+$$
+，之后根据这两个值求出f(n -3)，然后根据f(n-2)和f(n -3)求出f(n -4)一直往左知道求出
+$$
+f(0)
+$$
+，这就是我们要的结果！
+
+```java
+public class TransLateNumToString {
+    public int transLateNumToString(int n) {
+        if (n < 0) {
+            return 0;
+        }
+        return count(String.valueOf(n));
+    }
+
+    private int count(String num) {
+        int len = num.length();
+        int[] counts = new int[len];
+        for (int i = len - 1; i >= 0; i--) {
+            int count = 0;
+            if (i < len - 1) {
+                count = counts[i + 1];
+            } else {
+                count = 1;
+            }
+
+            if (i < len - 1) {
+                int digit1 = num.charAt(i)-'0';
+                int digit2 = num.charAt(i + 1)-'0';
+                int convertD = digit1 * 10 + digit2;
+                if (convertD >= 10 && convertD <= 25) {
+                    if (i < len - 2) {
+                        count += counts[i + 2];
+                    } else {
+                        count++;
+                    }
+                }
+
+            }
+            counts[i] = count;
+        }
+        return counts[0];
+
+    }
+
+    public static void main(String[] args) {
+
+        TransLateNumToString ts = new TransLateNumToString();
+        System.out.println(ts.transLateNumToString(12258));
+
+    }
+}
+```
+
 
 
 
