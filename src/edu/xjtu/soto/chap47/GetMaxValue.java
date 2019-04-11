@@ -68,6 +68,31 @@ public class GetMaxValue {
         return max[rows - 1][cols - 1];
     }
 
+    /**
+     * 上述方法优化，用一维数组代替二维数组
+     * @param gifts
+     * @return
+     */
+    public int betterGetMaxVal(int[][] gifts) {
+        if (gifts == null || gifts.length == 0) {
+            return 0;
+        }
+        int rows = gifts.length;
+        int cols = gifts[0].length;
+        int[] maxVal = new int[cols];
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                int left = 0;
+                int up = 0;
+                if (row > 0) up = maxVal[col];
+                if (col > 0) left = maxVal[col -1];
+                maxVal[col] = Math.max(up, left) + gifts[row][col];
+            }
+        }
+        return maxVal[cols-1];
+    }
+
+
     public static void main(String[] args) {
         GetMaxValue gmv = new GetMaxValue();
 
@@ -76,6 +101,8 @@ public class GetMaxValue {
         System.out.println(res1);
         int res2 = gmv.getMaxValue2(gifts);
         System.out.println(res2);
+        int res3 = gmv.betterGetMaxVal(gifts);
+        System.out.println(res3);
 
     }
 }

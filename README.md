@@ -4416,7 +4416,45 @@ max[f(i, j- 1), f(i-1, j)]+gift[i, j]
 
 ### 上面方法的优化——用一维数组代替二维数组
 
+当前礼物的最大价值只依赖f(i-1, j)和f(i, j -1)这两个格子，因此只需要当前行i，第j列的前面几个格子，也就是f(i, 0)~f(i, j-1)；以及i -1行的，第j列及其之后的几个格子，也就是f(i-1, j)~f(i-1, cols-1)
 
+两部分加起来的个数刚好是棋盘的列数cols。所以只需要一个长度为cols的一维数组即可，优化如下。
+
+```java
+/**
+     * 上述方法优化，用一维数组代替二维数组
+     * @param gifts
+     * @return
+     */
+    public int betterGetMaxVal(int[][] gifts) {
+        if (gifts == null || gifts.length == 0) {
+            return 0;
+        }
+        int rows = gifts.length;
+        int cols = gifts[0].length;
+        int[] maxVal = new int[cols];
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                int left = 0;
+                int up = 0;
+                if (row > 0) up = maxVal[col];
+                if (col > 0) left = maxVal[col -1];
+                maxVal[col] = Math.max(up, left) + gifts[row][col];
+            }
+        }
+        return maxVal[cols-1];
+    }
+
+```
+
+手动模拟一遍
+
+# 测试用例
+
+* 功能测试（多行多列的矩阵；一行或者一列的矩阵；只有一个数字的矩阵）
+* 特殊输入测试（指向矩阵数组的指针为null）
+
+# 面试题48
 
 
 
