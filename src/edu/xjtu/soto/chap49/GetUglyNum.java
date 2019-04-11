@@ -39,7 +39,7 @@ public class GetUglyNum {
 
     public static void main(String[] args) {
         GetUglyNum getUglyNum = new GetUglyNum();
-        int res = getUglyNum.getUglyNum(7);
+        int res = getUglyNum.getUglyNum(0);
         System.out.println(res);
 
     }

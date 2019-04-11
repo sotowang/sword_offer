@@ -4576,6 +4576,51 @@ public class GetUglyNum {
 
 ```
 
+## 测试用例
+
+* 功能测试（输入2，3，4，5，6等）。
+* 特殊输入测试（边界值1；无效输入0）。
+* 性能测试（输入较大的数字，舅1500）
+
+# 面试题50
+
+## 第一个只出现一次的字符
+
+>  题目一：字符串中第一个只出现一次的字符
+>
+> 在字符串中找出第一个只出现一次的字符。如输入“abaccdeff”，则输出’b‘
+
+```java
+public class FirstNotReoeatingChar {
+    public char firstNotRepeatingChar(String string) {
+        if (string == null || string.length() == 0) {
+            return '\0';
+        }
+        int count[] = new int[256];
+        for (int i = 0; i < string.length(); i++) {
+            count[string.charAt(i)]++;
+        }
+
+        for (int i = 0; i < string.length(); i++) {
+            if (count[string.charAt(i)] == 1) {
+                return string.charAt(i);
+            }
+        }
+        return '\0';
+    }
+
+    public static void main(String[] args) {
+        FirstNotReoeatingChar firstNotReoeatingChar = new FirstNotReoeatingChar();
+        char res1 = firstNotReoeatingChar.firstNotRepeatingChar(null);
+        System.out.println(res1);
+
+        char res2 = firstNotReoeatingChar.firstNotRepeatingChar("abaccdeff");
+        System.out.println(res2);
+
+    }
+}
+```
+
 
 
 
