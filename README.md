@@ -4449,12 +4449,73 @@ max[f(i, j- 1), f(i-1, j)]+gift[i, j]
 
 手动模拟一遍
 
-# 测试用例
+## 测试用例
 
 * 功能测试（多行多列的矩阵；一行或者一列的矩阵；只有一个数字的矩阵）
 * 特殊输入测试（指向矩阵数组的指针为null）
 
 # 面试题48
+
+## 最长不含重复字符的子字符串
+
+> 题目：请从字符串中找出一个最长的不包含重复字符的子字符串，计算该最长字符串的长度。假设字符串中只包含'a'-'z'的字符。
+>
+> 例如，在字符串“arabcacfr”中，最长的不含重复字符的子字符串是“acfr”，长度为4。
+
+动态规划，**定义$f(i)$表示以第i个字符为结尾的不含重复字符的子字符串长度。**
+
+如果第i个字符之前没有出现过，则$f(i) = f(i -1) +1$，比如‘abc',$f(0) = 1$是必然的，然后字符’b‘之前没有出现过，则$f(1) = f(0)+1$, 字符’c'之前没有出现过，那么$f(2) = f(1) +1$,每次计算都会用到上一次计算的结果。
+
+如果第i个字符之前出现过呢？找到该字符上次出现的位置preIndex，当前位置i - preIndex就得到这两个重复字符之间的距离，设为d。此时有两种情况
+
+- 如果`d <= f(i-1)`,说明当前重复字符必然在f(i-1)所对应的字符串中，比如’bdcefgc‘，当前字符c前面出现过了，preIndex为2，此时`d = 6 -2 = 4` ,小于` f(i -1) = 7 (bdcefg)`我们只好丢弃前一次出现的字符c及其前面的所有字符，得到当前最长不含重复字符的子字符串为’efgc‘，即`f(i) = 4`, 多举几个例子就知道，应该让`f(i) = d`；
+- 如果`d > f(i-1)`, 这说明当前重复字符必然在f(i-1)所对应的字符串**之前**，比如`erabcdabr`当前字符r和索引1处的r重复，`preIndex =1, i = 8,d = 7`。而`f(i -1) = 4 (cdab)`,此时直接加1即可，即`f(i) = f(i-1) +1`
+
+根据这两种情况可写出代码如下：
+
+```java
+public class LongestSubstring {
+    public int longestSubString(String string) {
+        int[] position = new int[26];
+        Arrays.fill(position, -1);
+
+        int p = 0;
+        int max = 0;
+
+
+        for (int i = 0; i < string.length(); i++) {
+            int pre = position[string.charAt(i) - 'a'];
+            if (pre == -1 || i - pre > p) {
+                p++;
+            } else {
+                p = i-pre;
+            }
+            position[string.charAt(i) - 'a'] = i;
+            if (max < p) {
+                max = p;
+            }
+        }
+
+        return max;
+    }
+
+
+    public static void main(String[] args) {
+        LongestSubstring longestSubstring = new LongestSubstring();
+//        int max1 = longestSubstring.longestSubString("bdcefgc");
+        int max2 = longestSubstring.longestSubString("erabcdabr");
+
+//        System.out.println(max1);
+        System.out.println(max2);
+    }
+}
+
+```
+
+## 测试用例
+
+* 功能测试（包含多个字符的字符串；只有一个字符的字符串；所有字符都唯一的字符串；所有字符都本周的字符串）。
+* 特殊输入测试（空字符串）
 
 
 
