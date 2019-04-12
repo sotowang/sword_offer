@@ -4702,13 +4702,197 @@ public class AppearOnceInStream {
 
 理解上述分析后，其实本题就可以直接使用归并排序，只是在左子数组中的某个元素大于右子数组某个元素时，多加一步——计算逆序对个数即可。
 
+```java
+public class InversePairs {
+
+    public int inversePairs(int[] array) {
+        if (array == null) {
+            return 0;
+        }
+        int[] aux = new int[array.length];
+        return sort(array, aux, 0, array.length - 1);
+    }
+
+    private int sort(int[] array, int[] aux, int low, int high) {
+        if (high <= low) {
+            return 0;
+        }
+        int mid = low + (high - low) / 2;
+        int left = sort(array, aux, low, mid);
+        int right = sort(array, aux, mid+1, high);
+
+        int merged = merge(array, aux, low, mid, high);
+        return left + right + merged;
+    }
+
+    private int merge(int[] array, int[] aux, int low, int mid, int high) {
+        int count = 0;
+        int len = (high - low) / 2;
+        int i = mid;
+        int j = high;
+
+        for (int k = low; k <= high; k++) {
+            aux[k] = array[k];
+        }
+
+        for (int k = high; k >= low; k--) {
+            if (i < low) array[k] = aux[j--];
+            else if (j < mid + 1) array[k] = aux[i--];
+            else if (aux[i] > aux[j]) {
+                // 在归并排序的基础上，在这里求count
+                count += j - low - len;
+                array[k] = aux[i--];
+            } else array[k] = aux[j--];
+        }
+        return count;
+    }
+
+    public static void main(String[] args) {
+        InversePairs inversePairs = new InversePairs();
+        int[] array = {7, 5, 6, 4};
+        int a = inversePairs.inversePairs(array);
+
+        System.out.println(a);
+
+    }
+
+}
+
+```
+
+# 面试题52
+
+## 两个链表的第一个公共节点
+
+> 题目：输入两个链表，找出它们的第一个公共节点。
+>
+> 链表节点定义如下：
+
+```java
+public class ListNode {
+    public int val;
+    public ListNode next = null;
+
+    public ListNode(int val) {
+        this.val = val;
+    }
+}
+```
+
+### 利用集合不能添加重复元素的特性
+
+说到使用额外空间，使用Set可以轻松找出第一个公共结点。所谓公共结点其实就是完全一样的元素，**而Set不能存入相同元素，当第一次添加元素失败时，该结点就是第一个公共结点了。**
+
+```java
+/**
+     * 方法1：两个辅助栈，从尾到头，找到最后一个相同的结点
+     * @param head1
+     * @param head2
+     * @return
+     */
+    public ListNode findFirstCommonNode(ListNode head1, ListNode head2) {
+        if (head1 == null || head2 == null) {
+            return null;
+        }
+        Set<ListNode> set = new HashSet<>();
+        ListNode p = head1;
+        ListNode q = head2;
+
+        while (p != null) {
+            set.add(p);
+            p = p.next;
+        }
+        while (q != null) {
+            if (!set.add(q)) {
+                return q;
+            }
+            q = q.next;
+        }
+        return null;
+    }
+```
 
 
 
+### 使用额外空间的方法
+
+因为第一个公共结点及其之后的结点都相同，所以我们可以将两条链表的**尾部对齐**
+
+，但是两条链表的长短可能不一样。这就需要长链表先走若干步，然后两条链表一起走，知道遇到一个相同结点，该结点就是第一个公共结点。具体长链表要先多少步，当然是长短链表长度之差。所有需先遍历一遍链表得到两个链表的长度。
+
+```java
+public ListNode findFirstCommonNode2(ListNode head1, ListNode head2) {
+        if (head1 == null || head2 == null) {
+            return null;
+        }
+        ListNode p = head1;
+        ListNode q = head2;
+        int len1 = 0;
+        int len2 = 0;
+
+        while (p != null) {
+            len1++;
+            p = p.next;
+        }
+        while (q != null) {
+            len2++;
+            q = q.next;
+        }
+        p = head1;
+        q = head2;
+
+        if (len1 > len2) {
+            for (int i = 0; i < len1 - len2; i++) {
+                p = p.next;
+            }
+        } else if (len2 > len1) {
+            for (int i = 0; i < len2 - len1; i++) {
+                q = q.next;
+            }
+        }
+
+        while (p != q && p != null) {
+            p = p.next;
+            q = q.next;
+        }
+        if (p == q && p != null) {
+            return p;
+        }else
+            return null;
+
+    }
+
+    public static void main(String[] args) {
+        FindFirstCommonNode findFirstCommonNode = new FindFirstCommonNode();
+
+        ListNode l1 = new ListNode(1);
+        ListNode l2 = new ListNode(2);
+        ListNode l3 = new ListNode(3);
+        ListNode l4 = new ListNode(4);
+        ListNode l5 = new ListNode(5);
+        ListNode l6 = new ListNode(6);
+        ListNode l7 = new ListNode(7);
+        ListNode l8 = new ListNode(8);
+
+        l1.next = l5;
+        l5.next = l6;
+        l6.next = l7;
+        l7.next = l8;
+
+        l2.next = l3;
+        l3.next = l4;
+        l4.next = l5;
+
+        ListNode commonNode1 = findFirstCommonNode.findFirstCommonNode1(l1, l2);
+        ListNode commonNode2 = findFirstCommonNode.findFirstCommonNode2(l1, l2);
 
 
+        System.out.println(commonNode1.val);
+        System.out.println(commonNode2.val);
 
+    }
 
+```
 
 
 
