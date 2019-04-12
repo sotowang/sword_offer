@@ -4621,6 +4621,81 @@ public class FirstNotReoeatingChar {
 }
 ```
 
+## 字符流中第一个只出现一次的字符
+
+> 请实现一个函数，用来找出字符流中第一个只出现一次的字符。
+>
+> 例如，当从字符流中只读出前两个字符“go”时，第一个只出现一次的字符是’g‘；当从该字符流中读出前6个字符“google”时，第一个只出现一次的字符是’l‘。
+
+使用一个insert函数模拟从字符流中读到一个字符。这次统计表`int[] occur = new int[256]`记录的是字符出现的索引.
+
+- 如果某个字符出现过，那么`occur[someChar] >= 0`;
+- 对于没有出现过的字符，令`occur[someChar] = -1`;
+- 如果某个字符第二次出现，令`occur[someChar] = -2`。
+
+要获得当前字符串中第一个只出现一次的，只需从所有`occur[someChar] >= 0`中结果中找出出现索引最小的那个字符即可。
+
+```java
+public class AppearOnceInStream {
+
+    private int[] count = new int[256];
+    private int index = 0;
+
+    public AppearOnceInStream() {
+        Arrays.fill(count, -1);
+    }
+    public void insert(char c) {
+        if (count[c] == -1) {
+            count[c] = index;
+        } else if (count[c] >= 0) {
+            count[c] = -2;
+        }
+        index++;
+    }
+
+    public char appearOnceInStream() {
+        int min = Integer.MAX_VALUE;
+        char c = '\0';
+        for (int i = 0; i < count.length; i++) {
+            if (count[i] >= 0 && count[i] < min) {
+                min = count[i];
+                c = (char) i;
+            }
+        }
+        return c;
+    }
+
+    public static void main(String[] args) {
+        AppearOnceInStream appearOnceInStream = new AppearOnceInStream();
+        appearOnceInStream.insert('g');
+        appearOnceInStream.insert('o');
+        System.out.println(appearOnceInStream.appearOnceInStream());
+        appearOnceInStream.insert('o');
+        appearOnceInStream.insert('g');
+        appearOnceInStream.insert('l');
+        appearOnceInStream.insert('e');
+        System.out.println(appearOnceInStream.appearOnceInStream());
+
+    }
+}
+
+```
+
+## 测试用例
+
+* 功能测试（读入一个字符；读入多个字符；读入所有字符都是唯一的；读入的所有字符都是重复出现的）
+* 特殊输入测试（诗篇0个字符）
+
+# 面试题51
+
+## 数组中的逆序对
+
+> 题目：在数组中有两个数字，如果前面一个数字大于后面的数字，则这两个数字组成一个逆序对。输入一个数组，求出这个数组中的逆序对的总数。
+>
+> 例如，在数组{7，5，6，4}中，一共存在5个逆序对，分别是（7，6），（7，5），（7，4），（6，4）和（5，4）
+
+
+
 
 
 
@@ -4691,3 +4766,4 @@ public class Candy {
 
 ```
 
+# 
