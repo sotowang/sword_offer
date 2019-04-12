@@ -4894,6 +4894,200 @@ public ListNode findFirstCommonNode2(ListNode head1, ListNode head2) {
 
 ```
 
+# 面试题53
+
+## 在排序数组中查找数字
+
+### 数字在排序数组中出现的次数
+
+> 统计一个数字在排序数组中出现的次数。
+>
+> 例如，输入排序数组{1，2，3，3，3，3，4，5}和烃字3.由于3在这个数组中出现了4次，因此输出4
+
+#### 方法一：二分查找
+
+```java
+public int getNumOfK(int[] array,int k) {
+        if (array == null || array.length == 0) {
+            return 0;
+        }
+
+        int first = getFirstOfK(array, k, 0, array.length - 1);
+        int last = getLastOfK(array, k, 0, array.length - 1);
+        if (first != -1 && last != -1) {
+            return last - first + 1;
+        }
+        return -1;
+
+    }
+
+    private int getLastOfK(int[] array, int k, int low, int high) {
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            if (array[mid] > k) {
+                high = mid - 1;
+            } else if (array[mid] < k) {
+                low = mid + 1;
+            } else {
+                if (mid == array.length-1 || array[mid + 1] != k) {
+                    return mid;
+                } else {
+                    low = mid + 1;
+                }
+            }
+        }
+        return -1;
+
+    }
+
+    private int getFirstOfK(int[] array, int k, int low, int high) {
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            if (array[mid] > k) {
+                high = mid - 1;
+            } else if (array[mid] < k) {
+                low = mid + 1;
+            } else {
+                if (mid == 0 || array[mid - 1] != k) {
+                    return mid;
+                } else {
+                    high = mid - 1;
+                }
+            }
+        }
+        return -1;
+    }
+```
+
+#### 方法二:更巧妙的二分法
+
+注意到要查找的数组元素都是int型的，我们知道普通二分查找只需稍微改变下返回值（返回low），就能得到一个排名方法——在数组中比k小的数有多少个，即k在数组中排名多少。有个很聪明的思路就是，在数组中查找接近k的浮点数。
+
+```java
+private int rank(int[] array, double k) {                      
+    int low = 0;                                               
+    int high = array.length - 1;                               
+                                                               
+    while (low <= high) {                                      
+        int mid = (high + low) / 2;                            
+        if (k > array[mid]) {                                  
+            low = mid + 1;                                     
+        } else if (k < array[mid]) {                           
+            high = mid - 1;                                    
+        }                                                      
+    }                                                          
+    return low;                                                
+}                                                              
+                                                               
+public int getNumberOfK2(int[] array, int k) {                 
+    if (array == null || array.length == 0) {                  
+        return 0;                                              
+    }                                                          
+    return rank(array, k + 0.5) - rank(array, k - 0.5);        
+}                                                              
+                                                               
+```
+
+### 0-n-1中缺失的数字
+
+>  一个长度为n-1的递增排序数组中的所有数字都是唯一的，并覓每个数字都在范围0-n-1之内，在范围0-n-1内的n个数字中有且只有一个数字不在该数组中，请找出这个数字。
+
+举个简单的例子来找到规律。比如数组长度为8，那么该数组中的数字都是0-8之间的，但是缺了一个数字，比如缺了4，则该数组为{0, 1, 2, 3, 5, 6, 7,8}
+
+可以发现，缺失数字还没出现时，始终有**该数字在数组中的下标等于该数，即array[i] == i**,但是从5开始不再有这样的关系。对于5及其之后的元素有array[i] == i+1，但是5之前的3仍然有array[3] == 3, 可以看到这是一个分界线。此时返回5所在的下标4就是我们要的答案。
+
+如果找到这个分界线呢？数组是有序的，仍然采用二分查找。当mid处满足array[mid] == mid，说明mid处及其之前的数都没有缺失，因此可以直接在mid右边数组查找；当array[mid] != mid说明mid处之前有元素丢失，此时再判断一下mid前的一个元素是否也有元素丢失，如果没有说明mid处是第一个值和下标不相等的元素，返回下标mid就是答案；如果mid处的前一个元素也有元素丢失，就继续缩小查找范围，在mid的左边数组继续查找即可。
+
+根据上面的描述，写出如下代码：
+
+```java
+public class FindTheLossNumber {
+    public int findTheLossNumber(int[] array) {
+        if (array == null || array.length == 0) {
+            return -1;
+        }
+
+        int low = 0;
+        int high = array.length - 1;
+
+        while (low <= high) {
+            int mid = (high + low) / 2;
+            if (array[mid] == mid) {
+                low = mid + 1;
+            } else {
+                if (mid == 0 || array[mid - 1] == mid - 1) {
+                    return mid;
+                }
+                high = mid - 1;
+            }
+
+        }
+
+        if (low == array.length) return array.length;
+        //  无效的输入数组，如不是递增排序，或者有的数字超出了0~n-1的范围
+        return -1;
+    }
+
+    public static void main(String[] args) {
+        FindTheLossNumber f = new FindTheLossNumber();
+        int[] array1 = {0, 1, 2, 3, 5, 6, 7, 8};
+        int[] array2 = {1, 2, 3, 4, 5, 6, 7, 8};
+        int res1 = f.findTheLossNumber(array1);
+        int res2 = f.findTheLossNumber(array2);
+
+
+        System.out.println(res1);
+        System.out.println(res2);
+    }
+}
+
+```
+
+### 数组中数值和下标相等的元素
+
+>  假设一个单调递增的数组里的每个元素都是整数并且是唯一的，请编程实现一个函数，找出数组中任意一个数值等于其下标的元素。
+>
+> 例如，在数组{-3,-1,1,3,5}中，数字3和它的下标相等。
+
+```java
+public class FindValEqualsIndex {
+    public int findValEqualsIndex(int[] array) {
+        if (array == null || array.length == 0) {
+            return -1;
+        }
+
+        int high = array.length - 1;
+        int low = 0;
+
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            if (array[mid] == mid) {
+                return mid;
+            } else if (mid > array[mid]) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+        return -1;
+    }
+
+    public static void main(String[] args) {
+        FindValEqualsIndex f = new FindValEqualsIndex();
+
+        int[] array = {-3, -1, 1, 3, 5};
+        int index = f.findValEqualsIndex(array);
+        System.out.println(index);
+
+    }
+
+}
+```
+
+
+
+
+
 
 
 

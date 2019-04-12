@@ -1,7 +1,6 @@
 package edu.xjtu.soto.chap52;
 
 import edu.xjtu.soto.ListNode;
-import edu.xjtu.soto.chap42.FindGreatestSumOfSubArray;
 
 import java.util.HashSet;
 import java.util.Set;
