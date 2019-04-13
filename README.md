@@ -5261,9 +5261,156 @@ public boolean isBalanced(TreeNode root) {
 
 ```
 
+# 面试题56
+
+## 数组中只出现一次的两个数字
+
+> 题目一： 
+>
+> 一个整形数组里除两个数字之外，其他数字都出现了两次。请写程序找出为两个只出现一次数数字。
+>
+> 要求时间复杂度为O(n)，空间复杂度为O(1)
+
+例如输入数组{2, 4, 3, 6, 3, 2, 5, 5},只有4和6这两个数字只出现了一次，其他数字都出现了两次，因此输出4和6。
+
+如果不考虑空间，用哈希表统计频率倒是很简单.....
+
+好吧，没有思路。书中使用的是位运算。
+
+先考虑简单的情况，如果数组中只有一个数字出现了一次而其他数都出现了两次。那么对数组中的每个数都做异或运算，因为两个相同的数每一位都相同，因此他们异或值为0，所有最后得到的结果就是那个只出现了一次的数。
+
+现在只出现了一次的数有两个，只需要将这两个数分开，使得其中一个数在一个子数组中，另外一个数在另一个子数组中，再使用上面的方法即可。
+
+由于有两个只出现了一次的数，对数组中所有数异或，得到的将是那两个只出现了一次的数的异或值。
+
+就以上面的例子来说，最后会得到4和6的异或值，即100和110的异或值010（省略了前面29个0，因为int型是32位的），可以看到从右往左数的第2位是1，说明4和6在从右往左数的第2位不一样。**在异或结果中找到第一个1的位置，假设是m（这说明那两个只出现了一次的数的第m位一个是1一个是0）。现在以第m位是不是1为标准将数组分成两部分，出现过两次的数一定会被分到同一个部分中，因为他们每一位都相同，第m位当然也相同；只出现过一次的两个数一定会被分到不同的部分中。**
+
+对这两部分分别异或，每一部分就得到了那么只出现了一次的数。
 
 
 
+```java
+public class FindNumberAppearOnce {
+
+    public void findNum(int[] array, int[] num1, int[] num2) {
+        if (array == null || array.length < 2) {
+            return;
+        }
+        int temp = 0;
+
+        //将数组所有元素进行异或运算，最后得到的值 为两个不同元素的异或值，因为一个数异或它本身为0
+        for (int i = 0; i < array.length; i++) {
+            temp ^= array[i];
+        }
+        int index = findFirstOneIndex(temp);
+
+        num1[0] = num2[0] = 0;
+        for (int i = 0; i < array.length; i++) {
+            if (isBitOne(array[i], index)) {
+                num1[0] ^= array[i];
+            } else {
+                num2[0] ^= array[i];
+            }
+        }
+    }
+
+    /**
+     * 找到第1个为1的位置
+     * @param n
+     * @return
+     */
+    private int findFirstOneIndex(int n) {
+        if (n == 0) {
+            return 0;
+        }
+        int count = 0;
+        while ((n & 1) != 1) {
+            n = n >> 1;
+            count++;
+        }
+        return count;
+    }
+
+    /**
+     * 判断该位 是否为1
+     * @param n
+     * @param index
+     * @return
+     */
+    private boolean isBitOne(int n, int index) {
+        n = n >> index;
+        if ((n & 1) == 1) {
+            return true;
+        }
+        return false;
+    }
+
+    public static void main(String[] args) {
+        FindNumberAppearOnce f = new FindNumberAppearOnce();
+        int[] num1 = {0};
+        int[] num2 = {0};
+        int[] array = {2, 4, 3, 6, 3, 2, 5, 5};
+
+        f.findNum(array, num1, num2);
+
+        System.out.println(Arrays.toString(num1) + "\n" +
+                Arrays.toString(num2));
+
+    }
+}
+```
+
+## 数组中唯一只出现一次的数字
+
+> 在一个数组中除一个数字只出现一次之外，其他数字都出现了三次。请找出那个只出现一次的数字。
+
+使用排序需要O(nlgn)的时间，使用哈希表需要O(n)的空间。有没有更好的？
+
+一个int型有32位，每一位不是0就是1。对于三个相同的数，统计每一位出现的频率，那么每一位的频率和一定能被3整除，也就是说频率和不是3就是0。如果有多组三个相同的数，统计的结果也是类似：频率和不是0就是3的倍数。
+
+现在其中混进了一个只出现一次的数，没关系也统计到频率和中。如果第n位的频率和还是3的倍数，说明只出现一次的这个数第n位是0；如果不能被3整除了，说明只出现一次的这个数第n位是1。由此可以确定这个只出现一次的数的二进制表示，想得到十进制还不简单吗。
+
+```java
+public int findOnceNum(int[] array) {
+        if (array == null || array.length == 0) {
+            throw new RuntimeException("Input Error");
+        }
+
+        int[] res = new int[32];
+
+        int bit = 1;
+
+        for (int i = 31; i >= 0; i--) {
+            for (int num : array) {
+                //第i位不为1
+                if ((num & bit) != 0) {
+                    res[i]++;
+                }
+            }
+            bit = bit << 1;
+        }
+
+        int num = 0;
+        // 转换成十进制时，从最高位开始，从由左至右第一个不为0的位开始
+        for (int i = 0; i <32; i++) {
+            num = num << 1;
+            num += res[i] % 3;
+        }
+        return num;
+    }
+
+    public static void main(String[] args) {
+        FindOnceNum f = new FindOnceNum();
+        int[] array = {3, 3, 3, 6};
+
+        int res = f.findOnceNum(array);
+        System.out.println(res);
+    }
+```
+
+要注意的一点是，统计每一位的频率时，是从最低位开始的，bitSum[31]存的是最低位的频率和，而bitSum[0]存的是最高位的频率和，这和人从左往右的阅读习惯一致。从二进制转换成十进制时，则是从最高位开始的，从由左至右第一个不为0的位开始累加，最后得到该数的十进制表示，返回即可。
+
+该方法只需要O(n)的时间，空间复杂度为O(1)。
 
 
 
