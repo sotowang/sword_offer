@@ -5151,6 +5151,116 @@ public class FindKthNode {
 
 ```
 
+# 面试题55
+
+## 二叉树的深度
+
+> 输入一棵二叉树的根节点，求该树的深度。从根节点到叶节点依次经过的节点（含根，叶节点）形成树的一条路径，最长路径的长度为树的深度。
+
+````
+     	1
+   2          3
+4     5           6
+     7
+````
+### 递归版本
+
+
+```java
+public int depth(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int left = depth(root.left) ;
+        int right = depth(root.right) ;
+
+        return Math.max(left, right) + 1;
+    }
+
+```
+
+### 非递归版本
+
+求深度，其实就是求这棵二叉树有多少层。于是采用BFS的层序遍历。关键就是怎么知道什么时候处理完了二叉树的一层？我们来模拟一下：
+
+就假设这是棵满二叉树吧，根结点先入队列，此时队列中结点个数为1，接着会弹出这唯一的根结点，同时入列两个结点，此时第一层处理完毕；
+
+现在队列中结点个数为2，我们出列两次，4个结点又会入列，此时第二层处理完毕；
+
+现在队列中结点个数为4，我们出列4次，8个结点又会入列，此时第三层处理完毕....
+
+发现规律了吗？**每次要出列前，先得到队列中现有的结点个数，假设是m，那么就在循环内出列m次，随即跳出循环，这样就算处理完一行了。**跳出循环后只需要将深度自增，最后层序遍历完毕也就得到了二叉树的深度。
+
+```java
+public int depth2(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+
+        int depth = 0;
+        TreeNode p;
+
+        while (!queue.isEmpty()) {
+            int layerSize = queue.size();
+            for (int i = 0; i < layerSize; i++) {
+                p = queue.poll();
+                if (p.left != null) {
+                    queue.offer(p.left);
+                }
+                if (p.right != null) {
+                    queue.offer(p.right);
+                }
+            }
+            depth++;
+        }
+
+        return depth;
+    }
+```
+
+
+
+
+
+
+
+
+
+## 平衡二叉树
+
+> 输入一棵二叉树的根节点，判断该树是不是平衡二叉树。如果某二叉树中任意节点的左，右子树的深度相差不超过1，那么它就是一棵平衡二叉树。
+
+```
+     	1
+   2          3
+4     5           6
+     7
+```
+
+### 修改求二叉树深度的方法
+
+仍然是先求得左右子树的深度，如果做差不超过1，就正常返回深度；如果超过了1就说明这不是棵平衡二叉树了，于是不断返回-1，直到根结点。如果不是平衡二叉树，最后会得到该二叉树的深度为-1，所以只需判断一棵二叉树的深度是不是大于等于0即可。
+
+```java
+public boolean isBalanced(TreeNode root) {
+        return depth3(root) >= 0;
+    }
+
+    private int depth3(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int left = depth3(root.left);
+        int right= depth3(root.right);
+
+        return left >= 0 && right >= 0 && Math.abs(left - right) <= 1 ? Math.max(left, right) + 1 : -1;
+    }
+
+```
+
 
 
 
