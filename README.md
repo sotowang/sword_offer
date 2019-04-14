@@ -5496,6 +5496,92 @@ public class FindContinuousSequence {
 
 ```
 
+# 面试题58
+
+## 翻转单词顺序
+
+> 输入一个英文句子，翻转句子中单词的顺序，但单词内字符的顺序不变。为简单起见，标点符号和就能字母一样处理。
+
+例如，输入字符串“I am a student.”则输出"student. a am I".
+
+```java
+public class ReverseSentence {
+    public String reverse(String sentence) {
+        if (sentence == null || sentence.trim().equals("")) {
+            return "";
+        }
+        String[] words = sentence.split("\\s+");
+        StringBuilder sb = new StringBuilder();
+        for (int i = words.length - 1; i >= 0; i--) {
+            sb.append(words[i]);
+            if (i > 0) {
+                sb.append(" ");
+            }
+        }
+        return sb.toString();
+    }
+
+    public static void main(String[] args) {
+        ReverseSentence rs = new ReverseSentence();
+        String re = rs.reverse("I am a student.");
+
+        System.out.println(re);
+
+    }
+}
+```
+
+## 左旋转字符串
+
+> 字符串的左旋转操作是把字符串前面的若干个字符转移到字符串的尾部。请定义一个函数实现字符串左旋转操作的功能。
+
+比如，输入字符串“abcdefg”和数字2，该函数将返回左旋转两位得到的结果"cdrfgab".
+
+
+
+举个简单的例子"hello world"，按照上题的要求，会得到"world hello". 而在此题中，假如要求将前五个字符左旋转，会得到" worldhello"(注意w前哟一个空格)，是不是接近了。
+
+所以本题可以延续上题的思路，不过这次先局部翻转再整体反转。如字符串"abcdefg"要求左旋转前两个字符，先反转ab和cdefg得到bagfedc，然后反转这个字符串得到cdefgab即是正确答案。
+
+```java
+public class RotateString {
+    public String rotateString(String str, int n) {
+        if (str == null || str.length() == 0 || str.length() < n) {
+            return "";
+        }
+        char[] chars = str.toCharArray();
+
+        reverse(chars, 0, n - 1);
+        reverse(chars, n, str.length() - 1);
+        reverse(chars, 0, str.length() - 1);
+
+        return new String(chars);
+    }
+
+    private void reverse(char[] chars, int low, int high) {
+
+        while (low <= high) {
+            char c = chars[high];
+            chars[high] = chars[low];
+            chars[low] = c;
+            low++;
+            high--;
+        }
+    }
+
+    public static void main(String[] args) {
+        RotateString rs = new RotateString();
+        String res = rs.rotateString("abcdefg", 2);
+
+        System.out.println(res);
+        
+    }
+}
+
+```
+
+
+
 
 
 
