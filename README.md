@@ -5414,6 +5414,92 @@ public int findOnceNum(int[] array) {
 
 
 
+# 面试题57
+
+## 和不s的两个数字
+
+> 输入一个递增排序的数组和一个数字s，在数组中查找两个数，使得它们的和正好是s。如果有多对数字的和等于s，则输出任意一对即可。
+
+例如，输入数组{1,2,4,7,11,15}和数字15.由于4+11=15，因此输出4和11.
+
+```java
+public void findNumberWithSum(int[] array, int num, int[] num1, int[] num2) {
+        if (array == null || array.length == 0) {
+            return;
+        }
+        int low = 0;
+        int high = array.length - 1;
+
+        while (low <= high) {
+            if (array[low] + array[high] == num) {
+                num1[0] = array[low];
+                num2[0] = array[high];
+                return;
+            } else if (array[low] + array[high] > num) {
+                high--;
+            } else {
+                low++;
+            }
+        }
+        return;
+    }
+```
+
+## 和为s的连续正数序列
+
+> 输入一个正数s，打印出所有和为s的连续正数序列（至少含有两个数）。
+
+例如，输入15，由于1+2+3+4+5=4+5+6=7+8=15,所以打印出3个连续序列1-5，4-6和7-8.
+
+
+
+```java
+public class FindContinuousSequence {
+    public ArrayList<ArrayList<Integer>> findContinuousSequence(int sum) {
+        ArrayList<ArrayList<Integer>> res = new ArrayList<>();
+        if (sum < 1) {
+            return res;
+        }
+        int mid = (sum + 1) / 2;
+
+        int low = 1;
+        int high = 2;
+        int curSum = 0;
+        ArrayList<Integer> temp = new ArrayList<>();
+
+        while (high <= mid) {
+            curSum = (low + high) * (high - low + 1) / 2;
+            if (curSum == sum) {
+                for (int i = low; i <= high; i++) {
+                    temp.add(i);
+                }
+                res.add(new ArrayList<>(temp));
+                temp.clear();
+                low++;
+                high = low + 1;
+            } else if (curSum < sum) {
+                high++;
+            } else {
+                low++;
+            }
+        }
+        return res;
+    }
+
+    public static void main(String[] args) {
+        FindContinuousSequence f = new FindContinuousSequence();
+        ArrayList<ArrayList<Integer>> res = f.findContinuousSequence(9);
+
+        System.out.println(res);
+    }
+}
+
+```
+
+
+
+
+
 
 
 ---
