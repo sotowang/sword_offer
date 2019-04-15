@@ -5681,7 +5681,60 @@ public class RotateString {
     }
 ```
 
+## 队列的最大值
 
+> 请定义一个队列并实现函数max得到队列里的最大值，要求函数max，push_back和oio_front的时间复杂度都是O(1)
+
+此题和面试题30“包含min的栈”同一个思路。
+
+一个dataQueue正常入列、出列元素，为了以O(1)的时间获取当前队列的最大值，需要使用一个maxQueue存放当前队列中最大值。具体来说就是，**如果即将要存入的元素比当前最大值还大，那么存入这个元素；否则再次存入当前最大值。**
+
+```java
+public class MaxQueue {
+    private Deque<Integer> maxQueue = new LinkedList<>();
+    private Deque<Integer> dataQueue = new LinkedList<>();
+    
+    public void offer(int n) {
+        dataQueue.offerLast(n);
+        
+        //即将要存入的元素比当前队列最大值还大，存入该元素
+        if (maxQueue.isEmpty() || n > maxQueue.peekFirst()) {
+            maxQueue.offerFirst(n);
+        } else {
+            //即将要存入和元素不超过当前队列最大值，再将最大值存入一次
+            maxQueue.offerFirst(maxQueue.peekFirst());
+        } 
+    }
+    
+    public void poll() {
+        if (dataQueue.isEmpty()) {
+            throw new RuntimeException("队列已空");
+        }
+        dataQueue.pollFirst();
+        maxQueue.pollFirst();
+    }
+    
+    public int max() {
+        if (maxQueue.isEmpty()) {
+            throw new RuntimeException("队列已空");
+        }
+        return maxQueue.peekFirst();
+    }
+```
+
+还是上面的例子{2, 3, 4, 2, 6, 2, 5}，分析随着各个元素入列dataQueue和maxQueue的情况。
+
+| 操作  | dataQueue           | maxQueue            | max  |
+| ----- | ------------------- | ------------------- | ---- |
+| 2入列 | 2                   | 2                   | 2    |
+| 3入列 | 2, 3                | 3, 2                | 3    |
+| 4入列 | 2, 3, 4             | 4, 3, 2             | 4    |
+| 2入列 | 2, 3, 4, 2          | 4, 4, 3, 2          | 4    |
+| 6入列 | 2, 3, 4, 2, 6       | 6, 4, 4, 3, 2       | 6    |
+| 2入列 | 2, 3, 4, 2, 6, 2    | 6, 6, 4, 4, 3, 2    | 6    |
+| 5入列 | 2, 3, 4, 2, 6, 2, 5 | 6, 6, 6, 4, 4, 3, 2 | 6    |
+
+出列的话两个队列同时出列一个元素，保证了maxQueue的队列头元素始终是dataQueue的当前最大值。
 
 
 
