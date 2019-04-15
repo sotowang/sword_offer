@@ -329,6 +329,8 @@ public class MergeTwoSortedArray {
 
 # 面试题6
 
+## 逆序打印链表节点
+
 题目：输入一个链表的头节点，从尾到头反过来打印出每个节点的值。
 
 链表定义如下
@@ -344,7 +346,7 @@ public class ListNode {
 }
 ```
 
-## 使用栈
+### 使用栈
 
 ```java
 public static ArrayList<Integer> printListFromTailToHead(ListNode listNode) {
@@ -359,7 +361,7 @@ public static ArrayList<Integer> printListFromTailToHead(ListNode listNode) {
     }
 ```
 
-## 递归
+### 递归
 
 ```java
 public  ArrayList<Integer> printListFromTailToHead2(ListNode listNode) {
@@ -374,7 +376,7 @@ public  ArrayList<Integer> printListFromTailToHead2(ListNode listNode) {
     }
 ```
 
-## 测试用例
+### 测试用例
 
 * 功能测试（输入的链表有多个节点；输入的链表只有一个节点）
 * 特殊输入测试（输入的链表头节点指针为nullptr）
@@ -430,6 +432,8 @@ public class TreeNode {
 ```
 
 # 面试题8
+
+## 中序遍历序列的下一节点
 
 题目：给定一棵二叉树和其中一个节点，如何找出中序遍历序列的下一节点？树中的节点除了有两个分别指向左，右节点的指针，还有一个指向父节点的指针。
 
@@ -495,7 +499,9 @@ public static TreeLinkNode getNextNode(TreeLinkNode target) {
 
 # 面试题9
 
-题目：用两个栈实现一个队列。队列的声明如下，请实现它的两个函数appendTail和deleteHead,分别完成在队列尾部插入节点和在队列头部删除节点的功能。
+## 两个栈实现一个队列
+
+题目：队列的声明如下，请实现它的两个函数appendTail和deleteHead,分别完成在队列尾部插入节点和在队列头部删除节点的功能。
 
 ```java
  private LinkedList<Integer> stack1 = new LinkedList<>();
@@ -519,15 +525,13 @@ public static TreeLinkNode getNextNode(TreeLinkNode target) {
 
 ```
 
-## 测试用例
+### 测试用例
 
 * 往空的队列里添加，删除元素
 * 往非空的队列里添加，删除元素
 * 连续删除元素直至队列为空
 
-## 相关题目
-
-题目：两个队列模拟一个栈
+## 两个队列模拟一个栈
 
 刚开始两个队列都为空，进栈时，可以进入任意一个队列。不妨默认进入`Queue a`。后续进栈时操作，哪个队列不为空（将看到，另外一个队列肯定为空）就进入该队列中。出栈操作，**最后进入队列的要先出栈**，而此时要出栈的元素在队列最后，但是队列只支持在队列头删除，因此将除了最后一个元素之外的所有元素都删除并复制一份到另一个队列`Queue another`，然后出列最后一个元素即可。此时`Queue a`成了空队列。之后每次出列操作都像上述以样：将不为空的队列中除最后一个元素的其余元素删除并复制到另一个空队列中，再删除原队列中唯一一个元素并弹出。**每次出栈操作后，总有一个队列是空的。又因为进栈时也是进入不为空的那个队列，因此进出栈操作时总有一个队列是空的。**
 
@@ -592,7 +596,7 @@ public class TwoQueueImpStack {
 
 # 面试题10
 
-题目一：求斐波那契数列的第n项
+## 求斐波那契数列的第n项
 
 写一个函数，输入n，求斐波那契（Fibonacci）数列的第n项。斐波那契数列的定义如下：
 $$
@@ -604,7 +608,7 @@ f(n-1)+f(n-2)  &\text{n>1}
 \end{cases}
 $$
 
-## 非递归
+### 非递归
 
 ```java
 public static long fibonacci(int n) {
@@ -629,7 +633,7 @@ public static long fibonacci(int n) {
     }
 ```
 
-## 递归
+### 递归
 
 ```java
 public static long finbonacci2(int n) {
@@ -3808,7 +3812,7 @@ public class GetLeastNumbers {
 
 比较一下这几个方法，**切分法是最快的，但是不适合用于处理海量数据；基于优先队列的实现虽然速度满了点但是可以进行海量数据处理**，看具体应用场景了。
 
-## 测试用例
+### 测试用例
 
 * 功能测试（输入的数组中有相同的数字；输入的数组中没有相同的数字）
 * 边界值测试（输入的k等于1或者等于数组的长度）
@@ -4066,7 +4070,7 @@ public int numberOf1Between1AndN2(int n) {
 
 
 
-## 测试用例
+### 测试用例
 
 * 功能测试（输入5，10，55，99等）。
 * 边界值测试（输入0，1等）
@@ -4313,7 +4317,7 @@ public class TransLateNumToString {
 }
 ```
 
-## 测试用例
+### 测试用例
 
 * 功能测试（只有一位数字：包含多位数字）。
 * 特殊输入测试（负数：0；包含25，26的数字）
@@ -4449,7 +4453,7 @@ max[f(i, j- 1), f(i-1, j)]+gift[i, j]
 
 手动模拟一遍
 
-## 测试用例
+### 测试用例
 
 * 功能测试（多行多列的矩阵；一行或者一列的矩阵；只有一个数字的矩阵）
 * 特殊输入测试（指向矩阵数组的指针为null）
@@ -5580,7 +5584,102 @@ public class RotateString {
 
 ```
 
+# 面试题59
 
+## 滑动窗口的最大值
+
+> 给定一个数组和滑动窗口的大小，请找出所有滑动窗口里的最大值。
+>
+> 例如，如果输入数组{2,3,4,2,6,2,5,1}及滑动窗口的大小3，那么一共存在6个滑动窗口，它们的嗫大值分别为{4，4，6，6，6，5}
+
+就以题目中的例子来模拟找出窗口中的最大值的过程。先存入3个元素，于是优先队列中有{2, 3, 4}，使用peek方法可以以O(1)的时间得到最大值，之后删除队列头的元素2，同时入列下一个元素，此时队列中有{3, 4, 2}，再调用peek方法得到最大值，然后删除队列头的3，下一个元素入列......不断重复进行此操作，直到最后队列中只有两个元素为止。
+
+### 方法1:基于最大堆的优先队列
+
+```java
+/**
+     * 使用优先队列（最大堆）
+     * @param array
+     * @param size
+     * @return
+     */
+    public ArrayList<Integer> maxInWindow(int[] array, int size) {
+        ArrayList<Integer> res = new ArrayList<>();
+        if (array == null || array.length < size || size <= 0) {
+            return res;
+        }
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Comparator.reverseOrder());
+        int j = 0;
+        for (int i = 0; i < array.length; i++) {
+            maxHeap.offer(array[i]);
+            if (maxHeap.size() >= size) {
+                res.add(maxHeap.peek());
+                maxHeap.remove(array[j++]);
+            }
+        }
+        return res;
+    }
+
+```
+
+### 方法2：使用双端队列
+
+这种思路**只将有可能成为滑动窗口中的最大值的元素入列**。
+
+使用双端队列，**队列头永远存放当前滑动窗口的最大值，而队列尾存放候选最大值，即当队列头的最大值弹出后成为新的最大值的那些元素**。以题目中的例子模拟下该思路。
+
+一开始2进入队列，然后3进入队列，因为3比2大，所以2不可能是滑动窗口的最大值。因此先将2从队列中弹出，然后3入列；接下来4入列也类似：将3弹出，4入列，目前队列中只有一个元素，且滑动窗口中已经有三个数字了，所以此时窗口中的最大值是位于队列头的4。
+
+接下来2入列，虽然比4小，但是不知道什么时候4将会位于滑动窗口之外，所以这个2还是有一定可能成为窗口中的最大值的，应该将其入列，注意应该排在队列的尾部，因为队列头始终是当前窗口的最大值。由于队列头还是4，所以此时窗口中的最大值还是4。
+
+然后6入列，队列中的4和2都不可能成为窗口中的最大值了，因此应该先从队列中弹出4和2然后再将6入列....后面的分析也大同小异。
+
+ ......
+
+再看最后一个元素1，它入列前，队列中有6和5，且6位于队列头是窗口中的最大值，按照之前的做法，应该将1入列，但是窗口的大小为3，此时队列头的6已经在窗口之外了，所以要讲6从队列中弹出，那么此时队列中还剩下5和1且5位于队列头，所以最后一个窗口中的最大值是5。**那么如何判断某个元素还在不在窗口内呢？我们应该在往队列中存元素的下标而不是元素本身。**若当前正访问的元素的下标与窗口最大值的下标（即队列头元素的下标）超过了窗口的宽度，就应该从队列头删除这个在滑动窗口之外的最大值。
+
+总之就是：
+
+- 即将要入列的的元素比队列中哪些元素大或者相等，就将那些元素先从队列中删除，然后再入列新元素；
+- 队列头的最大值如果位于滑动窗口之外，则需要将队列头的最大值从队列中删除；
+- 当前下标加上1（因为下标从0开始计）等于窗口宽度的时候就可以开始统计滑动窗口的最大值了
+
+基于以上三点可写出下面的代码
+
+
+
+```java
+/**
+     * 使用双端队列，存入数组下标
+     * @param array
+     * @param size
+     * @return
+     */
+    public ArrayList<Integer> maxInWindow2(int[] array, int size) {
+        ArrayList<Integer> res = new ArrayList<>();
+
+        if (array == null || array.length < size || size <= 0) {
+            return res;
+        }
+        Deque<Integer> deque = new LinkedList<>();
+        for (int i = 0; i < array.length; i++) {
+            while (!deque.isEmpty() && array[i] >= array[deque.peekLast()]) {
+                deque.pollLast();
+            }
+            if (!deque.isEmpty() && i - deque.peekFirst() >= size) {
+                deque.pollFirst();
+            }
+            deque.offerLast(i);
+            if (i + 1 >= size) {
+                res.add(array[deque.peekFirst()]);
+            }
+
+        }
+        return res;
+
+
+    }
+```
 
 
 
