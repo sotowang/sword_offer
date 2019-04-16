@@ -6243,13 +6243,136 @@ public class StrToInt {
 
 ```
 
+# 面试题68
+
+## 求树结点最低公共结点祖先
+
+这道题说得很含糊，仅仅告诉了*一棵树，*那这棵树是二叉树吗？再具体点，它是二叉查找树吗？我们来一一讨论这这几种情况。
+
+### 如果这颗树是二叉查找树
+
+二叉查找树的特点是：**任意父节点都大于其左子树的所有结点值，且都小于其右子树的所有结点值**。两个结点的公共祖先一定是大于其中较小的那个且小于其中较大的那个，而**从根结点开始从上到下遇到的第一个位于两个输入结点值之间的结点就是最低的公共祖先。**
+
+于是我们可以这么做：从根结点开始，和两个输入结点的值比较，如果当前结点比两个输入都小，那么最低公共祖先一定在当前结点的右子树中，所以下步遍历右子树；如果当前结点比两个输入都大，那么最低公共祖先一定在当前结点的左子树中，所以遍历左子树......直到找到第一个位于两个输入结点值之间的结点就是最低的公共祖先。
+
+```java
+/**
+     * 二叉查找树
+     * @param root
+     * @param a
+     * @param b
+     * @return
+     */
+    public TreeNode findLastSame(TreeNode root, TreeNode a, TreeNode b) {
+        if (root == null || a== null || b== null) {
+            return null;
+        }
+        TreeNode p = root;
+        while (p != null) {
+            if (p.val < a.val && p.val < b.val) {
+                p = p.right;
+            }
+            if (p.val > a.val && p.val > b.val) {
+                p = p.left;
+            }
+            if ((p.val > a.val && p.val < b.val) || (p.val < a.val && p.val > b.val)) {
+                return p;
+            }
+        }
+        return null;
+    }
+```
+
+### 拥有指向父结点的指针
+
+如果这棵树只是一颗普通的树，但是它拥有指向父结点的指针，该如何求最低公共祖先呢。
+
+这个问题就更简单了，拥有指向父结点的话，**这棵树从下往上看，就是若干条链表汇集在根结点处。我们要找的就是这两个结点的第一个公共结点。**
+
+之前刚好做过一道题*面试题52*就是求两个链表的第一个公共结点，直接把代码拿过来就行。
+
+此处省略代码
+
+### 普通树，没有指向父结点的指针
+
+这道题再加大难度，如果没有指向父结点的指针呢？是否还能转换成两个链表的第一个公共结点来解决？
+
+想办法创造链表。两个输入结点如果在树中存在，那么**从根结点开始向下的某条路径中必然包含这个结点**，使用两个链表分别保存包含这两个结点的路径。这样就可以把问题转换成求两个链表的第一个公共结点了。
+
+```java
+public class LastSameInCommonTree {
+    public CommonTreeNode findLastSame(CommonTreeNode root, CommonTreeNode a, CommonTreeNode b) {
+        if (root == null || a == null || b == null) {
+            return null;
+        }
+        LinkedList<CommonTreeNode> path1 = new LinkedList<>();
+        LinkedList<CommonTreeNode> path2 = new LinkedList<>();
+        collectNode(root, a, path1);
+        collectNode(root, b, path2);
+
+        CommonTreeNode node = getLastSameNode(path1, path2);
+
+        return node;
+
+    }
+
+    private boolean collectNode(CommonTreeNode root, CommonTreeNode a, LinkedList<CommonTreeNode> path) {
+        path.add(root);
+        if (root == a) {
+            return true;
+        }
+        for (CommonTreeNode p : root.children) {
+            if (collectNode(p, a, path)) {
+                return true;
+            }
+        }
+        path.remove(root);
+        return false;
+    }
+
+    private CommonTreeNode getLastSameNode(LinkedList<CommonTreeNode> path1, LinkedList<CommonTreeNode> path2) {
+        CommonTreeNode common = null;
+        while (!path1.isEmpty() && !path2.isEmpty()) {
+            if (path1.peek() == path2.removeFirst()) {
+                common = path1.removeFirst();
+            }
+        }
+        return common;
+    }
 
 
+    public static void main(String[] args) {
+        CommonTreeNode a = new CommonTreeNode("A");
+        CommonTreeNode b = new CommonTreeNode("B");
+        CommonTreeNode c = new CommonTreeNode("C");
+        CommonTreeNode d = new CommonTreeNode("D");
+        CommonTreeNode e = new CommonTreeNode("E");
+        CommonTreeNode f = new CommonTreeNode("F");
+        CommonTreeNode g = new CommonTreeNode("G");
+
+        a.children.add(b);
+        a.children.add(c);
+        a.children.add(d);
+
+        b.children.add(e);
+        b.children.add(f);
+
+        c.children.add(g);
 
 
+        LastSameInCommonTree l = new LastSameInCommonTree();
+        LinkedList<CommonTreeNode> path1 = new LinkedList<>();
+        LinkedList<CommonTreeNode> path2 = new LinkedList<>();
+        System.out.println(l.findLastSame(a, e, g).val);
+        System.out.println(l.findLastSame(a, e, f).val);
 
+    }
+}
+```
 
+上面代码中，路径是从根结点向下的，所以两个链表前面的结点都是相同的，这样就把**两个链表的第一个公共结点问题转换成了两个链表的最后一个相等的结点**，这两个命题是等价的。
 
+得到两条路径需要遍历树两次，每次都是$O(n)$的时间，而每条路径需要的空间在平均情况下是$O(\lg n)$,最差情况下(树退化成链表)是$O(n)$
 
 
 
