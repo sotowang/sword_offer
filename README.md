@@ -13,21 +13,21 @@
 ### 饿汉式单例
 
 ```java
-public class EagerSIngleton {
+public class EagerSingleton {
 
     //类加载时先New一个出来
-    private static EagerSIngleton eagerSIngleton = new EagerSIngleton();
-    private EagerSIngleton() {
+    private static EagerSingleton eagerSingleton = new EagerSingleton();
+    private EagerSingleton() {
 
     }
 
-    public static EagerSIngleton getInstance() {
+    public static EagerSingleton getInstance() {
         return eagerSIngleton;
     }
 
     public static void main(String[] args) {
-        EagerSIngleton s1 = EagerSIngleton.getInstance();
-        EagerSIngleton s2 = EagerSIngleton.getInstance();
+        EagerSingleton s1 = EagerSingleton.getInstance();
+        EagerSingleton s2 = EagerSingleton.getInstance();
 
         System.out.println(s1 == s2);
 
