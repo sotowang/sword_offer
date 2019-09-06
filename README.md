@@ -60,6 +60,21 @@ public class LazySingleton {
 }
 ```
 
+### 枚举型单例
+
+```java
+package edu.xjtu.soto.chap2;
+
+/**
+ * @author wst
+ * @create 2019-09-05 20:18
+ */
+public enum EnumSingleton {
+    INSTANCE;
+}
+
+```
+
 
 
 # 面试题3
@@ -111,9 +126,6 @@ public Boolean duplicate2(int[] arrays, int length, int[] duplicate) {
             }
 
         }
-
-
-
         return false;
     }
 ```
@@ -164,7 +176,7 @@ public int duplicate(int[] arrays, int length, int[] duplicate) {
 
 在一个二维数组中，每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序，请完成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。
 
-> 例如下面的二维数组就是每行，每眼列都递增排序。如果在这个数组中查找数字7，则返回truel；旭盯想找数字5，由于数组不含有该数字，则返回false
+> 例如下面的二维数组就是每行，每列都递增排序。如果在这个数组中查找数字7，则返回true；如果想找数字5，由于数组不含有该数字，则返回false
 
 | 1    | 2    | 8    | 9    |
 | ---- | ---- | ---- | ---- |
@@ -746,7 +758,7 @@ public static void ageSort(int[] ages) {
     }
 ```
 
-公司员工的年龄有一个范围，在上面的代码中，允许的范围是0-99岁。数组temp胜来统计每个年龄出现的次数，某个年龄出现了多少次，就在数组ages里设置几次该年龄，这就相当于组数组ages排序了。该方法用长度100的整数数组作为辅助空间换来了O（n）的时间效率。
+公司员工的年龄有一个范围，在上面的代码中，允许的范围是0-99岁。数组temp来统计每个年龄出现的次数，某个年龄出现了多少次，就在数组ages里设置几次该年龄，这就相当于组数组ages排序了。该方法用长度100的整数数组作为辅助空间换来了O（n）的时间效率。
 
 ## 旋转数组的最小数字
 
