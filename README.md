@@ -3352,6 +3352,12 @@ public static void main(String[] args) {
 
 例如：输入字符串abc，则打印出由字符a、b、c所能排列出来的甩有字符串abc、acb、bac、bca、cab和cba
 
+*  把整个字符串视为第一个字符的后来的字符的组合
+
+* 每次确定一个元素，和后面的元素依次兑换
+
+  ![img](https://pic4.zhimg.com/80/v2-48fce50383aa798b64fce457a49af897_hd.jpg)
+
 ```java
 public class Permutation {
 
